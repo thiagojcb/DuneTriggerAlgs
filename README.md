@@ -34,7 +34,7 @@ mkdir build
 cd build
 cmake ../
 make -j`nproc`
-ctest # if you want to run the tests
+ctest # if you want to run the tests, right now it doesn't do anything interesting
 ```
 
 ## To contribute
@@ -43,7 +43,7 @@ Fork this repo.
 ## More details on the structs
 ### TriggerPrimitive
 This struct represent hits, it contains:
- - The time of the hit
+ - The start time of the hit
  - The time of the peak ADC
  - The time over threshold
  - The channel number of the hit
@@ -58,7 +58,7 @@ Represents a cluster of hits, it contains:
  - The central time (peak time)
  - The first channel to be hit
  - The last channel to be hit
- - The list of APAs
+ - The list of APAs have a hit contributor in form of a bitset (APA fired are up bitset of the corresponding number)
  - The ADC integral
  - The ADC peak
  
@@ -67,6 +67,4 @@ contains:
  - The time at which the readout should start
  - The time at which the readout should end
  - The time at which the decision was made
- - What APA should be readout with a bitfield. Each bitfield index correspond to an APA, when the byte is high, that means
- that APA should be readout, for example: `000 001` means that the APA 0 should be readout in a configuration where there is
- only 6 APAs.
+ - What APA should be readout with a bitset, similar to the TriggerCandidate
