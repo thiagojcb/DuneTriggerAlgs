@@ -6,12 +6,6 @@ enable_testing()
 #   - ROOT built with classic configure/make use the provided $ROOTSYS/etc/cmake/FindROOT.cmake
 #   - ROOT built with CMake. Add in CMAKE_PREFIX_PATH the installation prefix for ROOT
 
-find_package(ROOT REQUIRED COMPONENTS RIO Net XMLIO)
-find_program(LSB_RELEASE_EXEC lsb_release)
-find_package(TBB REQUIRED)
-
-include(${ROOT_USE_FILE})
-string(CONCAT CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} " -Wall -Wextra -Wpedantic -Werror")
 #grabs the distribution
 execute_process(COMMAND ${LSB_RELEASE_EXEC} -is
   OUTPUT_VARIABLE LSB_RELEASE_ID_SHORT
