@@ -4,8 +4,7 @@
 
 namespace DuneTriggers {
   class TriggerDecisionMaker {
-    TriggerDecisionMaker() = default;
-    ~TriggerDecisionMaker() = default;
+  public:
     std::vector<TriggerDecision> MakeDecision(std::vector<TriggerCandidate>&) = 0;
   }
 }
