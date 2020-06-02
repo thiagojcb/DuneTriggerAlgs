@@ -3,13 +3,14 @@
 #include "TriggerPrimitive.hh"
 
 #include <bitset>
+#include <cstdint>
 #include <vector>
 
 namespace DuneTriggers {
   struct TriggerCandidate {
-    int time_start = {0};
-    int time_end = {0};
-    int time_peak = {0};
+    int64_t time_start = {0};
+    int64_t time_end = {0};
+    int64_t time_peak = {0};
     int channel_start = {0};
     int channel_end = {0};
     int channel_peak = {0};
