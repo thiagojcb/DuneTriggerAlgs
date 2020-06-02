@@ -1,1 +1,2 @@
 add_executable(compile_me compile_me.cxx)
+add_executable(run_random_trivial run_random_trivial.cxx)

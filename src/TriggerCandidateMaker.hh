@@ -1,12 +1,15 @@
 #pragma once
+#include "TriggerQueue.hh"
 #include "TriggerPrimitive.hh"
 #include "TriggerCandidate.hh"
 #include <vector>
 
 namespace DuneTriggers {
 
-  class TriggerCandidateMaker {
+  class TriggerCandidateMaker:public TriggerQueue<TriggerPrimitive,TriggerCandidate> {
   public:
-    virtual std::vector<TriggerCandidate> MakeCandidate(std::vector<TriggerPrimitive>&) = 0;
+    virtual void Process() = 0;
+    TriggerCandidateMaker():
+      TriggerQueue(100, 100){}
   };
 }
