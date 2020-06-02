@@ -8,15 +8,16 @@
 
 namespace DuneTriggers {
   struct TriggerCandidate {
-    int64_t time_start = {0};
-    int64_t time_end = {0};
-    int64_t time_peak = {0};
-    int channel_start = {0};
-    int channel_end = {0};
-    int channel_peak = {0};
-    std::bitset<DuneTriggers::n_apa> apa = {};
-    int adc_integral = {0};
-    int adc_peak = {0};
+    int64_t  time_start    = {0};
+    int64_t  time_end      = {0};
+    int64_t  time_peak     = {0};
+    uint32_t channel_start = {0};
+    uint32_t channel_end   = {0};
+    uint32_t channel_peak  = {0};
+    uint32_t detid         = {0};
+    uint16_t adc_integral  = {0};
+    uint16_t adc_peak      = {0};
+    uint32_t detid         = {0};
   };
     
     // TriggerCandidate(std::vector<TriggerPrimitive>& prims):
