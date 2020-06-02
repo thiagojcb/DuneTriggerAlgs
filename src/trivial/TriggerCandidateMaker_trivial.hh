@@ -8,8 +8,6 @@ using namespace DuneTriggers;
 class TriggerCandidateMakerTrivial: public TriggerCandidateMaker {
   /// This candidate maker makes a candidate with all the trigger primitives
 public:
-  TriggerCandidateMakerTrivial() = default;
-  ~TriggerCandidateMakerTrivial() = default;
   
   std::vector<TriggerCandidate> MakeCandidate(std::vector<TriggerPrimitive>& prims) {
 
@@ -28,7 +26,7 @@ public:
 
     for (auto const& it: prims) {
       if(it.apa != apa) {
-        TriggerCandidate cand(temp);
+        TriggerCandidate cand; // FIXME
         temp.clear();
         vect.push_back(cand);
       } else {
@@ -37,7 +35,7 @@ public:
     }
     
     if (not temp.empty()) {
-      TriggerCandidate cand(temp);
+      TriggerCandidate cand;//FIXME
       vect.push_back(cand);
     }
     
