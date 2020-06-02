@@ -12,11 +12,11 @@ Their format will be discussed at a DAQ meeting and fixed at some point.
 
 The trigger primitives are created within ArtDAQ or LArSoft. These are passed to one or more `TriggerCandidateMaker`
 classes which create the `TriggerCandidates`. The `TriggerCandidates` are then passed on to one or more
-`TriggerDecisionMaker` classes, which create the decisions. Both rely on their pure virtual function
+`TriggerDecisionMaker` classes, which create the decisions. Both rely on their pure virtual function:
  - `std::vector<TriggerCandidate> TriggerCandidateMaker::MakeCandidate(std::vector<TriggerPrimitive>&)`
  - `std::vector<TriggerDecision> TriggerDecisionMaker::MakeDecision(std::vector<TriggerCandidate>&)`
 
-That any `TriggerCandidateMaker` and `TriggerDecisionMaker` need to implement, respectively. These functions do all
+that any `TriggerCandidateMaker` and `TriggerDecisionMaker` need to implement, respectively. These functions do all
 the work, they should be reasonably fast to handle the rate at which their input arrive in the real system.
 
 Note none the granularity of the `TriggerCandidateMaker` and `TriggerDecisionMaker` isn't be decided here.
