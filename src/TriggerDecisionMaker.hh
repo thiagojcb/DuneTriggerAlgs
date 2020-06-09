@@ -5,6 +5,6 @@
 namespace DuneTriggers {
   class TriggerDecisionMaker {
   public:
-    std::vector<TriggerDecision> MakeDecision(const std::vector<TriggerCandidate>&) = 0;
+    virtual void operator()(const TriggerCandidate input_tc, std::vector<TriggerDecision>& output_tds) = 0;
   }
 }

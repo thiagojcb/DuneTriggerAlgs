@@ -5,11 +5,8 @@
 #include <vector>
 
 namespace DuneTriggers {
-
   class TriggerCandidateMaker:public TriggerQueue<TriggerPrimitive,TriggerCandidate> {
   public:
-    virtual void Process() = 0;
-    TriggerCandidateMaker():
-      TriggerQueue(100, 100){}
+    virtual void operator()(const TriggerPrimitive& input_tp, std::vector<TriggerCandidate>& output_tc) = 0;
   };
 }

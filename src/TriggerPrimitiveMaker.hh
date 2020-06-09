@@ -4,6 +4,6 @@
 namespace DuneTrigger {
   class TriggerPrimitiveMaker {
   public:
-    std::vector<TriggerPrimitive> MakePrimitive() = 0;
+    virtual void operator()(const void* data, std::vector<TriggerPrimitive>& tps) = 0;
   }
 }
