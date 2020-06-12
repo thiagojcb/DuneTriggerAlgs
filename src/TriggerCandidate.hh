@@ -1,10 +1,6 @@
 #pragma once
-#include "CommonDef.hh"
 #include "TriggerPrimitive.hh"
-
-#include <bitset>
 #include <cstdint>
-#include <vector>
 
 namespace DuneTriggers {
   struct TriggerCandidate {

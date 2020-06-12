@@ -1,5 +1,6 @@
 #pragma once
 #include "TriggerPrimitive.hh"
+#include <vector>
 
 namespace DuneTrigger {
   class TriggerPrimitiveMaker {
