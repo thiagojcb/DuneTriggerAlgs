@@ -8,7 +8,6 @@ using namespace DuneTriggers;
 class TriggerCandidateMakerSupernova: public TriggerCandidateMaker {
   /// This candidate maker makes a candidate with all the trigger primitives
 public:
-  virtual void Process() {};
-  
-  
+  void operator()(const TriggerPrimitive&, std::vector<TriggerCandidate>&) {};
+
 };
