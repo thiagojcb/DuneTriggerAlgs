@@ -39,13 +39,10 @@ TriggerPrimitive GetRandomTP(std::chrono::time_point<std::chrono::steady_clock>&
   tp.time_start          = pd_clock(tp_start_time).count();
   tp.time_over_threshold = pd_clock(tot_time).count();
   tp.time_peak           = pd_clock(tp_start_time+peak_time).count();
-  std::cout << "\033[32mtp.time_start : " << tp.time_start << "\033[0m - ";
-  std::cout << "\033[32mtp.time_over_threshold : " << tp.time_over_threshold << "\033[0m - ";
   tp.channel             = rdm_channel(generator);
   tp.adc_integral        = rdm_adc(generator);
   tp.adc_peak            = rdm_adc(generator);
   tp.detid               = tp.channel;
-  std::cout << "\033[32mtp.detid : " << tp.detid << "\033[0m\n";
   
   return tp;
 }
@@ -56,27 +53,28 @@ int main() {
   generator.seed(std::chrono::system_clock::now().time_since_epoch().count());
   int n_second_generating = 2;
   // millisec or kHz
-  std::exponential_distribution<double> tp_rate(1./10.);
-  std::poisson_distribution<int> n_tp(10);
-  std::normal_distribution<double> electronic_delay(20, 0.5);
+  std::exponential_distribution<double> tp_rate(3);
+  std::normal_distribution<int> n_tp(1,0);
+  std::normal_distribution<double> electronic_delay(0, 0);
   
   TriggerCandidateMakerTrivial tcmt;
   NaiveTriggerQueue tq(tcmt);
   NaiveTriggerCandidateConsumer tcc(tq);
   
-
   tq.Start();
   tcc.Start();  
   std::thread worker_thread(&NaiveTriggerQueue::Worker, &tq);
   std::thread consumer_thread(&NaiveTriggerCandidateConsumer::Worker, &tcc);
   int n_tps_total=0;
-  
+  int n_cluster=0;
+    
+  std::chrono::time_point<std::chrono::steady_clock> start_time = std::chrono::steady_clock::now();
   while(true) {
     auto now = std::chrono::steady_clock::now();
     int n = n_tp(generator);
     n_tps_total+=n;
-    std::cout << "\033[32mGenerating " << n << " TPs\033[0m\n";
     std::vector <TriggerPrimitive> tps;
+    n_cluster += n>0;
     
     for (int i=0; i<n; ++i) {
       tps.push_back(GetRandomTP(now));
@@ -92,12 +90,16 @@ int main() {
     millisec_wait = std::chrono::milliseconds(wait);
     std::this_thread::sleep_for(millisec_wait);
     
-    if (now-time_ref > std::chrono::seconds(n_second_generating)){
+    if (now-start_time > std::chrono::seconds(n_second_generating)){
       break;
     }
   }
+  std::chrono::time_point<std::chrono::steady_clock> end_time = std::chrono::steady_clock::now();
   
-  std::cout << "\033[32mn_tps_total : " << n_tps_total << "\033[0m\n";
+  std::cout << "TPs created: " << n_tps_total << "\n";
+  std::cout << "\"True\" cluster created: " << n_cluster << "\n";
+  auto dt = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+  std::cout << "TP rate: " << n_tps_total / (double)dt.count() << " MHz\n";
 
   tq.SoftStop();
   tcc.Stop();

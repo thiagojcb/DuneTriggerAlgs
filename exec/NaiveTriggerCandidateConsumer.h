@@ -51,7 +51,11 @@ public:
     mtx.lock();
     consume_on = false;
     mtx.unlock();
-    std::cout << "Created "<< n_tc << " clusters.\n";
+    TriggerCandidate tc;
+    if (tq.tcm.GetLastCluster(tc))
+      PrintToFile(tc);
+    
+    std::cout << "Created "<< n_tc << " TCs.\n";
   }
     
   void PrintToFile(TriggerCandidate& tc) {
@@ -66,7 +70,6 @@ public:
                        std::to_string(tc.adc_peak     )+"\t\t"+
                        std::to_string(tc.detid        )+"\n");
     file_out << str;
-    //std::cout << str;
       
   }
 };

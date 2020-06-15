@@ -32,13 +32,6 @@ public:
     
     bool is_in_between_edge = ((tend > m_time_start and tend < m_time_end) or
                                (input_tp.time_start > m_time_start and input_tp.time_start < m_time_end));
-    // std::cout << "\033[32mis_close_to_edge : " << is_close_to_edge << "\033[0m\n";
-    // std::cout << "\033[32mis_in_between_edge : " << is_in_between_edge << "\033[0m\n";
-    // std::cout << "\033[32mm_time_tolerance : " << m_time_tolerance << "\033[0m\n";
-    // std::cout << "\033[32mm_time_start : " << m_time_start << "\033[0m\n";
-    // std::cout << "\033[32mm_time_end : " << m_time_end << "\033[0m\n";
-    // std::cout << "\033[32minput_tp.time_start : " << input_tp.time_start << "\033[0m\n";
-    // std::cout << "\033[32mtend : " << tend << "\033[0m\n\n\n";
     
     if (not is_close_to_edge and not is_in_between_edge) {
       output_tc.push_back(MakeTriggerCandidate());
@@ -88,11 +81,15 @@ public:
     m_adc_integral  (0),
     m_adc_peak      (0),
     m_detid         (0) {};
-
+  
+  bool GetLastCluster(TriggerCandidate& tc) const {
+    tc = MakeTriggerCandidate();
+    return true;
+  }
 
 private:
   
-  TriggerCandidate MakeTriggerCandidate() {
+  TriggerCandidate MakeTriggerCandidate() const {
     TriggerCandidate tc {m_time_start,
                          m_time_end,
                          m_time_peak,  
