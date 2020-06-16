@@ -83,7 +83,7 @@ int main() {
     uint64_t wait = electronic_delay(generator);
     std::chrono::milliseconds millisec_wait(wait);
     std::this_thread::sleep_for(millisec_wait);
-
+    
     tq.AddToQueue(tps);
     
     wait = tp_rate(generator);
@@ -97,9 +97,9 @@ int main() {
   std::chrono::time_point<std::chrono::steady_clock> end_time = std::chrono::steady_clock::now();
   
   std::cout << "TPs created: " << n_tps_total << "\n";
-  std::cout << "\"True\" cluster created: " << n_cluster << "\n";
-  auto dt = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
-  std::cout << "TP rate: " << n_tps_total / (double)dt.count() << " MHz\n";
+  std::cout << "\"True\" clusters created: " << n_cluster << "\n";
+  auto dt = std::chrono::duration_cast<std::chrono::nanoseconds>(end_time - start_time);
+  std::cout << "Average TP rate: " << n_tps_total / (double)dt.count() * 1000000.<< " MHz\n";
 
   tq.SoftStop();
   tcc.Stop();
