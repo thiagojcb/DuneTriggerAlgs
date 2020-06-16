@@ -3,8 +3,15 @@ A place to put the trigger algorithms for DUNE. This code can then be
 linked inside ArtDAQ and LArSoft, so that we can run the exact same
 code in simulation and on real data.
 
+### TOC
+[Organisation](##Organisation)
+[Compile](##To compile it)
+[Contribute](##To contribute)
+[Data structures](##More details on the structs)
+
+
 ## Organisation
-The code is quite simple. Essentially, the trigger algorithm rely on 3
+>The code is quite simple. Essentially, the trigger algorithm rely on 3
 structs:
  - `TriggerPrimitive` (also known as hits)
  - `TriggerCandidate` (clusters)
