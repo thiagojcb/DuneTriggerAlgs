@@ -4,13 +4,13 @@ linked inside ArtDAQ and LArSoft, so that we can run the exact same
 code in simulation and on real data.
 
 ### TOC
- - [Organisation](##Organisation)
- - [Compile](##Compile)
- - [Contribute](##Contribute)
- - [Data structures](##Structs)
+ - [Organisation](##organisation)
+ - [Compile](##compile)
+ - [Contribute](##contribute)
+ - [Data structures](##structs)
 
 
-<a name="Organisation"/>
+<a name="organisation"/>
 ## Organisation
 The code is quite simple. Essentially, the trigger algorithm rely on 3
 structs:
@@ -48,7 +48,7 @@ create and handle the DuneTriggers objects and the calls to them. The
 classes `NaiveTriggerQueue` and `NaiveTriggerCandidateConsumer` that
 `run_trivial_candidate.cxx` are indicative.
 
-<a name="Compile"/>
+<a name="compile"/>
 ## To compile it
 You need to have the boost libraries for testing.
 ```
@@ -61,11 +61,11 @@ make -j`nproc`
 ctest # if you want to run the tests, right now it doesn't do anything interesting
 ```
 
-<a name="Contribute"/>
+<a name="contribute"/>
 ## To contribute
 Fork this repo.
 
-<a name="Structs"/>
+<a name="structs"/>
 ## More details on the structs
 Note all the times here refer to 50 MHz clock (since epoch), as is now standard in DUNE.
 
