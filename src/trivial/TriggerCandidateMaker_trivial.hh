@@ -6,6 +6,21 @@ using namespace DuneTriggers;
 
 class TriggerCandidateMakerTrivial: public TriggerCandidateMaker {
   /// This candidate maker makes a candidate with all the trigger primitives
+  inline bool is_time_consistent(const TriggerPrimitive& input_tp) const {
+    
+    int64_t tend = input_tp.time_start+input_tp.time_over_threshold;
+    
+    bool is_close_to_edge = (m_time_tolerance > abs(input_tp.time_start - m_time_end  ) or
+                             m_time_tolerance > abs(input_tp.time_start - m_time_start) or
+                             m_time_tolerance > abs(tend - m_time_end  ) or
+                             m_time_tolerance > abs(tend - m_time_start));
+    
+    bool is_in_between_edge = ((tend > m_time_start and tend < m_time_end) or
+                               (input_tp.time_start > m_time_start and input_tp.time_start < m_time_end));
+
+    return is_in_between_edge or is_close_to_edge;
+  }
+    
 public:
   
   void operator()(const TriggerPrimitive& input_tp, std::vector<TriggerCandidate>& output_tc) {
@@ -24,16 +39,10 @@ public:
       m_detid         = input_tp.detid;
       return;
     }
+
+    bool time_ok = is_time_consistent(input_tp);
     
-    bool is_close_to_edge = (m_time_tolerance > abs(input_tp.time_start - m_time_end  ) or
-                             m_time_tolerance > abs(input_tp.time_start - m_time_start) or
-                             m_time_tolerance > abs(tend - m_time_end  ) or
-                             m_time_tolerance > abs(tend - m_time_start));
-    
-    bool is_in_between_edge = ((tend > m_time_start and tend < m_time_end) or
-                               (input_tp.time_start > m_time_start and input_tp.time_start < m_time_end));
-    
-    if (not is_close_to_edge and not is_in_between_edge) {
+    if (not time_ok) {
       output_tc.push_back(MakeTriggerCandidate());
       
       m_time_start    = input_tp.time_start;
