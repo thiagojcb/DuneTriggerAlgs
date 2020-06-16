@@ -11,6 +11,7 @@ code in simulation and on real data.
 
 
 <a name="organisation"/>
+
 ## Organisation
 The code is quite simple. Essentially, the trigger algorithm rely on 3
 structs:
@@ -49,6 +50,7 @@ classes `NaiveTriggerQueue` and `NaiveTriggerCandidateConsumer` that
 `run_trivial_candidate.cxx` are indicative.
 
 <a name="compile"/>
+
 ## To compile it
 You need to have the boost libraries for testing.
 ```
@@ -62,10 +64,12 @@ ctest # if you want to run the tests, right now it doesn't do anything interesti
 ```
 
 <a name="contribute"/>
+
 ## To contribute
 Fork this repo.
 
 <a name="structs"/>
+
 ## More details on the structs
 Note all the times here refer to 50 MHz clock (since epoch), as is now standard in DUNE.
 
