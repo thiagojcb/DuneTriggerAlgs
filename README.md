@@ -4,10 +4,10 @@ linked inside ArtDAQ and LArSoft, so that we can run the exact same
 code in simulation and on real data.
 
 ### TOC
- - [Organisation](##organisation)
- - [Compile](##compile)
- - [Contribute](##contribute)
- - [Data structures](##structs)
+ - [Organisation](#organisation)
+ - [Compile](#compile)
+ - [Contribute](#contribute)
+ - [Data structures](#structs)
 
 
 <a name="organisation"/>
