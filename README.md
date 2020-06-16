@@ -56,6 +56,8 @@ ctest # if you want to run the tests, right now it doesn't do anything interesti
 Fork this repo.
 
 ## More details on the structs
+Note all the times here refer to 50 MHz clock (since epoch), as is now standard in DUNE.
+
 ### TriggerPrimitive
 This struct represent hits, it contains:
 | Variable              | Type       | Comment                                                          |
