@@ -4,15 +4,15 @@ linked inside ArtDAQ and LArSoft, so that we can run the exact same
 code in simulation and on real data.
 
 ### TOC
-[Organisation](##Organisation)
-[Compile](##Compile)
-[Contribute](##Contribute)
-[Data structures](##Structs)
+ - [Organisation](##Organisation)
+ - [Compile](##Compile)
+ - [Contribute](##Contribute)
+ - [Data structures](##Structs)
 
 
 <a name="Organisation"/>
 ## Organisation
->The code is quite simple. Essentially, the trigger algorithm rely on 3
+The code is quite simple. Essentially, the trigger algorithm rely on 3
 structs:
  - `TriggerPrimitive` (also known as hits)
  - `TriggerCandidate` (clusters)
