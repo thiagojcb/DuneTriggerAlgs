@@ -13,6 +13,7 @@ namespace DuneTriggers {
     uint16_t adc_integral  = {0};
     uint16_t adc_peak      = {0};
     uint32_t detid         = {0};
+    uint32_t flags         = {0};
   };
     
     // TriggerCandidate(std::vector<TriggerPrimitive>& prims):
