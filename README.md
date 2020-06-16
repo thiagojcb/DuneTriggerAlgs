@@ -25,17 +25,27 @@ The trigger primitives are created within ArtDAQ or LArSoft. These are
 passed to one or more `TriggerCandidateMaker` classes which create the
 `TriggerCandidates`. The `TriggerCandidates` are then passed on to one
 or more `TriggerDecisionMaker` classes, which create the
-decisions. Both rely on their pure virtual function:
- - `void TriggerPrimitiveMaker::operator()(const void* data, std::vector<TriggerPrimitive>& tps)`
+decisions. Each rely on their pure virtual function:
  - `void TriggerCandidateMaker::operator()(const TriggerPrimitive& input_tp, std::vector<TriggerCandidate>& output_tc)`
  - `void TriggerDecisionMaker::operator()(const TriggerCandidate& input_tp, std::vector<TriggerDecision>& output_tc)`
 
 that any`TriggerPrimitiveMaker`, `TriggerCandidateMaker` and
-`TriggerDecisionMaker` need to implement, respectively. These
-functions do all the work, they should be reasonably fast to handle
-the rate at which their input arrive in the real system. The "makers"
-get input data, rearrange it, and then `push_back` to the output
-vector. An example is available in
+`TriggerDecisionMaker` need to implement, respectively.
+
+Note the TPs can also be created here, but the given how this happens
+now in real life, it doesn't look like these libraries will be used
+for creating TPs (the data structures in for the raw data are very
+complicated and closely tighed to ArtDAQ, that is not so much the case
+in LArSoft), hence the `TriggerPrimitiveMaker` class exists with its
+corresponding operator:
+- `void TriggerPrimitiveMaker::operator()(const void* data, std::vector<TriggerPrimitive>& tps)`
+
+but that may not necessarily be used.
+
+These operators do all the work, they should be reasonably
+fast to handle the rate at which their input arrive in the real
+system. The "makers" get input data, rearrange it, and then
+`push_back` to the output vector. An example is available in
 `src/trivial/TriggerCandidateMaker_trivial.hh`. It can be tested with
 a `exec/run_trivial_candidate.cxx`, which create fake TPs, and feed
 them into it.
