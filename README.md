@@ -5,11 +5,12 @@ code in simulation and on real data.
 
 ### TOC
 [Organisation](##Organisation)
-[Compile](##To compile it)
-[Contribute](##To contribute)
-[Data structures](##More details on the structs)
+[Compile](##Compile)
+[Contribute](##Contribute)
+[Data structures](##Structs)
 
 
+<a name="Organisation"/>
 ## Organisation
 >The code is quite simple. Essentially, the trigger algorithm rely on 3
 structs:
@@ -47,6 +48,7 @@ create and handle the DuneTriggers objects and the calls to them. The
 classes `NaiveTriggerQueue` and `NaiveTriggerCandidateConsumer` that
 `run_trivial_candidate.cxx` are indicative.
 
+<a name="Compile"/>
 ## To compile it
 You need to have the boost libraries for testing.
 ```
@@ -59,9 +61,11 @@ make -j`nproc`
 ctest # if you want to run the tests, right now it doesn't do anything interesting
 ```
 
+<a name="Contribute"/>
 ## To contribute
 Fork this repo.
 
+<a name="Structs"/>
 ## More details on the structs
 Note all the times here refer to 50 MHz clock (since epoch), as is now standard in DUNE.
 
