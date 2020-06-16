@@ -54,7 +54,7 @@ int main() {
   int n_second_generating = 2;
   // millisec or kHz
   std::exponential_distribution<double> tp_rate(3);
-  std::normal_distribution<int> n_tp(1,0);
+  std::normal_distribution<int> n_tp(20,2);
   std::normal_distribution<double> electronic_delay(0, 0);
   
   TriggerCandidateMakerTrivial tcmt;
