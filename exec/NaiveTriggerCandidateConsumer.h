@@ -2,7 +2,7 @@
 
 #include <fstream>
 
-#include <mutex>
+#include <atomic>
 
 #include "TriggerCandidateMaker.hh"
 /// A simple class that just dumps every candidate it receives in a txt file, and wait random times in between
@@ -10,22 +10,20 @@
 class NaiveTriggerCandidateConsumer {
 protected:
   std::ofstream file_out;
+  std::atomic<bool> consume_on;
+  int n_tc;
+  NaiveTriggerQueue& tq;
 
 public:
 
   NaiveTriggerCandidateConsumer(NaiveTriggerQueue& tq_):
     tq(tq_),
     consume_on (false),
-    mtx(),
     n_tc(0){
-    file_out.open("candidate_dump.txt");
-    file_out << "tstart\t\ttend\t\ttpeak\t\tchannel_start\tchannel_end\tchannel_peak\tadc_integral\tadc_peak\tdetid\n";
+    file_out.open("candidate_dump.csv");
+    file_out << "tstart,tend,tpeak,channel_start,channel_end,channel_peak,adc_integral,adc_peak,detid\n";
   }
   
-  NaiveTriggerQueue& tq;
-  bool consume_on;
-  std::mutex mtx; // to protect above
-  int n_tc;
   
   void Worker() {
     while (true) {
@@ -33,24 +31,18 @@ public:
       if (tq.GetNextProcessed(tc))
         PrintToFile(tc);
       
-      mtx.lock();
-      if (not consume_on) break;
-      mtx.unlock();
+      if (not consume_on.load()) break;
     }
-    mtx.unlock();
   }
 
   void Start() {
     std::cout << "\033[32mStarting Candidate consumer\033[0m\n";
-    mtx.lock();
-    consume_on = true;
-    mtx.unlock();
+    consume_on.store(true);
   }
     
   void Stop() {
-    mtx.lock();
-    consume_on = false;
-    mtx.unlock();
+    std::cout << "\033[32mStopping Candidate consumer\033[0m\n";
+    consume_on.store(false);
     TriggerCandidate tc;
     if (tq.tcm.GetLastCluster(tc))
       PrintToFile(tc);
@@ -60,14 +52,14 @@ public:
     
   void PrintToFile(TriggerCandidate& tc) {
     n_tc++;
-    std::string str = (std::to_string(tc.time_start   )+"\t"+
-                       std::to_string(tc.time_end     )+"\t"+
-                       std::to_string(tc.time_peak    )+"\t"+
-                       std::to_string(tc.channel_start)+"\t\t"+
-                       std::to_string(tc.channel_end  )+"\t\t"+
-                       std::to_string(tc.channel_peak )+"\t\t"+
-                       std::to_string(tc.adc_integral )+"\t\t"+
-                       std::to_string(tc.adc_peak     )+"\t\t"+
+    std::string str = (std::to_string(tc.time_start   )+","+
+                       std::to_string(tc.time_end     )+","+
+                       std::to_string(tc.time_peak    )+","+
+                       std::to_string(tc.channel_start)+","+
+                       std::to_string(tc.channel_end  )+","+
+                       std::to_string(tc.channel_peak )+","+
+                       std::to_string(tc.adc_integral )+","+
+                       std::to_string(tc.adc_peak     )+","+
                        std::to_string(tc.detid        )+"\n");
     file_out << str;
       

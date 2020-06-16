@@ -1,83 +1,69 @@
 #pragma once
-#include <mutex>
+#include <boost/lockfree/queue.hpp>
+
 #include "trivial/TriggerCandidateMaker_trivial.hh"
 
 class NaiveTriggerQueue {
 protected:
-  boost::circular_buffer<TriggerPrimitive> queue_in;
-  boost::circular_buffer<TriggerCandidate> queue_out;
-  std::mutex mtx_queue_in;
-  std::mutex mtx_queue_out;
-  std::mutex mtx_process_on;
+  boost::lockfree::queue<TriggerPrimitive> queue_in;
+  boost::lockfree::queue<TriggerCandidate> queue_out;
   
-  bool process_on;
-    
-  bool get_next_in_queue_no_mutex(TriggerPrimitive& dat) {
-    if (not queue_in.empty()) {
-      dat = std::move(queue_in[0]);
-      queue_in.pop_front();
-      return true;
+  std::atomic<bool> process_on;
+
+  bool bounded_push_with_warning(const TriggerPrimitive& dat) {
+    if (not queue_in.bounded_push(dat)) {
+      std::cout << "\033[31mWarning, queue_in is full, not filling!\033[0m\n";
+      return false;
     }
-    return false;
+    return true;
   }
-    
 public:
+  
   TriggerCandidateMaker& tcm;
   NaiveTriggerQueue(TriggerCandidateMaker& tcm_, size_t depth_in=100, size_t depth_out=100):
     queue_in  (depth_in ),
     queue_out (depth_out),
-    mtx_queue_in (),
-    mtx_queue_out(),
-    mtx_process_on(),
     process_on(false),
-    tcm(tcm_) { }
-    
+    tcm(tcm_) {
+    assert(queue_in .is_lock_free());
+    assert(queue_out.is_lock_free());
+  }
+
+  
   void AddToQueue(const TriggerPrimitive& dat) {
-    mtx_queue_in.lock();
-    queue_in.push_back(dat);
-    mtx_queue_in.unlock();
+    bounded_push_with_warning(dat);
   }
     
   void AddToQueue(const std::vector<TriggerPrimitive>& dats) {
-    mtx_queue_in.lock();
-    std::for_each(dats.begin(), dats.end(), [this](TriggerPrimitive dat)->void {this->queue_in.push_back(dat);});
-    mtx_queue_in.unlock();
+    std::for_each(dats.begin(), dats.end(),
+                  [this](const TriggerPrimitive dat)->void {
+                    this->bounded_push_with_warning(dat);
+                  });
   }
 
   void Worker() {
     while (true) {
-      mtx_queue_in.lock();
-      mtx_queue_out.lock();
 
       TriggerPrimitive tp;
       std::vector<TriggerCandidate> tcs;
 
-      if (get_next_in_queue_no_mutex(tp))
+      if (queue_in.pop(tp))
         tcm(tp, tcs);
 
       for (auto const& tc: tcs) {
-        queue_out.push_back(tc);
+        queue_out.push(tc);
       }
       
-      mtx_queue_in.unlock();
-      mtx_queue_out.unlock();
-
-      mtx_process_on.lock();
-      if (not process_on) break;
-      mtx_process_on.unlock();
+      if (not process_on.load()) break;
     }
   }
 
   void Start() {
-    mtx_process_on.lock();
-    process_on = true;
-    mtx_process_on.unlock();
+    process_on.store(true);
   }
     
   void Stop() {
-    mtx_process_on.lock();
-    process_on = false;
-    mtx_process_on.unlock();
+    process_on.store(false);
   }
 
     
@@ -111,9 +97,7 @@ public:
     
     while (true) {
 
-      mtx_queue_out.lock();
-      bool should_try_again = (not queue_out.empty() and i_try++<n_tries);
-      mtx_queue_out.unlock();
+      bool should_try_again = (not queue_out.empty() and i_try<n_tries);
 
       if (!should_try_again) break;
 
@@ -125,30 +109,18 @@ public:
       
       std::chrono::milliseconds millisec_wait(50);
       std::this_thread::sleep_for(millisec_wait);
+      i_try++;
     }
     std::cout << "\n";
-    mtx_queue_out.lock();
     if (not queue_out.empty()) {
       std::cout << "The consumer of TC hasn't caught up\n";
     }
     
-    mtx_queue_in.unlock();
-    mtx_queue_out.unlock();
-    mtx_process_on.lock();
-    process_on = false;
-    mtx_process_on.unlock();
+    process_on.store(false);
   }
     
   const bool GetNextProcessed(TriggerCandidate& dat) {
-    mtx_queue_out.lock();
-    if (not queue_out.empty()) {
-      dat = std::move(queue_out[0]);
-      queue_out.pop_front();
-      mtx_queue_out.unlock();
-      return true;
-    }
-    mtx_queue_out.unlock();
-    return false;
+    return queue_out.pop(dat);
   }
 
 };
