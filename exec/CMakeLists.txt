@@ -1,3 +1,5 @@
 add_executable(compile_me compile_me.cxx)
 add_executable(run_trivial_candidate run_trivial_candidate.cxx)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(compile_me PRIVATE ${DT_INCLUDES})
+target_include_directories(run_trivial_candidate PRIVATE ${DT_INCLUDES})
+target_link_libraries(run_trivial_candidate ${CMAKE_THREAD_LIBS_INIT})

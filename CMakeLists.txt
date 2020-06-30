@@ -28,9 +28,10 @@ set(BOOST_INCLUDE_DIRS $boost_installation_prefix/include)
 #find_package(Gperftools REQUIRED) 
 #---Define useful ROOT functions and macros (e.g. ROOT_GENERATE_DICTIONARY)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${Boost_INCLUDE_DIRS})
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
+find_package(Threads REQUIRED)
+
+set(DT_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/exec)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/test)
+# add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/test)

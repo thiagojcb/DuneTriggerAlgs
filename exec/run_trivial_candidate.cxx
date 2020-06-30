@@ -14,7 +14,7 @@ using pd_clock = std::chrono::duration<double, std::ratio<1, 50000000>>;
 
 std::default_random_engine generator;
 
-std::uniform_int_distribution<double>  rdm_channel(0, 2560);
+std::uniform_int_distribution<int>     rdm_channel(0, 2560);
 std::normal_distribution<double>       rdm_adc(20, 5);
 std::normal_distribution<double>       rdm_time_over_threshold(100, 20); // nanosec
 std::normal_distribution<double>       rdm_start_time(0, 20); // nanosec
@@ -54,7 +54,7 @@ int main() {
   int n_second_generating = 2;
   // millisec or kHz
   std::exponential_distribution<double> tp_rate(3);
-  std::normal_distribution<int> n_tp(20,2);
+  std::normal_distribution<double> n_tp(20,2);
   std::normal_distribution<double> electronic_delay(0, 0);
   
   TriggerCandidateMakerTrivial tcmt;
