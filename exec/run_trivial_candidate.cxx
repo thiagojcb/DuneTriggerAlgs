@@ -5,10 +5,11 @@
 
 #include <boost/circular_buffer.hpp>
 
-#include "trivial/TriggerCandidateMaker_trivial.hh"
+#include "dune-triggers/Trivial/TriggerCandidateMaker_Trivial.hh"
 #include "NaiveTriggerQueue.h"
 #include "NaiveTriggerCandidateConsumer.h"
 
+using namespace DuneTriggers;
 
 using pd_clock = std::chrono::duration<double, std::ratio<1, 50000000>>;
 
@@ -57,7 +58,7 @@ int main() {
   std::normal_distribution<double> n_tp(20,2);
   std::normal_distribution<double> electronic_delay(0, 0);
   
-  TriggerCandidateMakerTrivial tcmt;
+  TriggerCandidateMakerTrivial tcmt("");
   NaiveTriggerQueue tq(tcmt);
   NaiveTriggerCandidateConsumer tcc(tq);
   

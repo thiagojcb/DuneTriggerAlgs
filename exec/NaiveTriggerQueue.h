@@ -1,16 +1,16 @@
 #pragma once
 #include <boost/lockfree/queue.hpp>
 
-#include "trivial/TriggerCandidateMaker_trivial.hh"
+#include "dune-triggers/Trivial/TriggerCandidateMaker_Trivial.hh"
 
 class NaiveTriggerQueue {
 protected:
-  boost::lockfree::queue<TriggerPrimitive> queue_in;
-  boost::lockfree::queue<TriggerCandidate> queue_out;
+  boost::lockfree::queue<DuneTriggers::TriggerPrimitive> queue_in;
+  boost::lockfree::queue<DuneTriggers::TriggerCandidate> queue_out;
   
   std::atomic<bool> process_on;
 
-  bool bounded_push_with_warning(const TriggerPrimitive& dat) {
+  bool bounded_push_with_warning(const DuneTriggers::TriggerPrimitive& dat) {
     if (not queue_in.bounded_push(dat)) {
       std::cout << "\033[31mWarning, queue_in is full, not filling!\033[0m\n";
       return false;
@@ -19,8 +19,8 @@ protected:
   }
 public:
   
-  TriggerCandidateMaker& tcm;
-  NaiveTriggerQueue(TriggerCandidateMaker& tcm_, size_t depth_in=100, size_t depth_out=100):
+  DuneTriggers::TriggerCandidateMaker& tcm;
+  NaiveTriggerQueue(DuneTriggers::TriggerCandidateMaker& tcm_, size_t depth_in=100, size_t depth_out=100):
     queue_in  (depth_in ),
     queue_out (depth_out),
     process_on(false),
@@ -30,13 +30,13 @@ public:
   }
 
   
-  void AddToQueue(const TriggerPrimitive& dat) {
+  void AddToQueue(const DuneTriggers::TriggerPrimitive& dat) {
     bounded_push_with_warning(dat);
   }
     
-  void AddToQueue(const std::vector<TriggerPrimitive>& dats) {
+  void AddToQueue(const std::vector<DuneTriggers::TriggerPrimitive>& dats) {
     std::for_each(dats.begin(), dats.end(),
-                  [this](const TriggerPrimitive dat)->void {
+                  [this](const DuneTriggers::TriggerPrimitive dat)->void {
                     this->bounded_push_with_warning(dat);
                   });
   }
@@ -44,8 +44,8 @@ public:
   void Worker() {
     while (true) {
 
-      TriggerPrimitive tp;
-      std::vector<TriggerCandidate> tcs;
+      DuneTriggers::TriggerPrimitive tp;
+      std::vector<DuneTriggers::TriggerCandidate> tcs;
 
       if (queue_in.pop(tp))
         tcm(tp, tcs);
@@ -74,11 +74,11 @@ public:
 
     // if (not queue_in.empty()) {
     //   std::cout << "TPs queue not entirely consumed, doing that now.\n";
-    //   TriggerPrimitive tp;
+    //   DuneTriggers::TriggerPrimitive tp;
 
     //   while (get_next_in_queue_no_mutex(tp)) {
 
-    //     std::vector<TriggerCandidate> tcs;
+    //     std::vector<DuneTriggers::TriggerCandidate> tcs;
     //     tcm(tp,tcs);
     //     mtx_queue_out.lock();
         
@@ -119,7 +119,7 @@ public:
     process_on.store(false);
   }
     
-  const bool GetNextProcessed(TriggerCandidate& dat) {
+  const bool GetNextProcessed(DuneTriggers::TriggerCandidate& dat) {
     return queue_out.pop(dat);
   }
 

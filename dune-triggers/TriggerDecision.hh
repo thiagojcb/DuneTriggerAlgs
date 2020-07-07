@@ -1,5 +1,4 @@
 #pragma once
-#include "CommonDef.hh"
 #include <bitset>
 #include <cstdint>
 

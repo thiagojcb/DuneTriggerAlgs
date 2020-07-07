@@ -27,7 +27,7 @@ public:
   
   void Worker() {
     while (true) {
-      TriggerCandidate tc;
+      DuneTriggers::TriggerCandidate tc;
       if (tq.GetNextProcessed(tc))
         PrintToFile(tc);
       
@@ -43,14 +43,14 @@ public:
   void Stop() {
     std::cout << "\033[32mStopping Candidate consumer\033[0m\n";
     consume_on.store(false);
-    TriggerCandidate tc;
+    DuneTriggers::TriggerCandidate tc;
     if (tq.tcm.GetLastCluster(tc))
       PrintToFile(tc);
     
     std::cout << "Created "<< n_tc << " TCs.\n";
   }
     
-  void PrintToFile(TriggerCandidate& tc) {
+  void PrintToFile(DuneTriggers::TriggerCandidate& tc) {
     n_tc++;
     std::string str = (std::to_string(tc.time_start   )+","+
                        std::to_string(tc.time_end     )+","+

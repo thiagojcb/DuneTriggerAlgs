@@ -1,0 +1,18 @@
+# - Config file for the DuneTriggers package
+# It defines the following variables
+#  DUNETRIGGERS_INCLUDE_DIRS - include directories for DuneTriggers
+#  DUNETRIGGERS_LIBRARIES    - libraries to link against
+
+# Compute paths
+get_filename_component(DUNETRIGGERS_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+set(DUNETRIGGERS_INCLUDE_DIRS "@CONF_INCLUDE_DIRS@")
+
+# Our library dependencies (contains definitions for IMPORTED targets)
+if(NOT DuneTriggers_BINARY_DIR)
+  include("${DUNETRIGGERS_CMAKE_DIR}/DuneTriggersTargets.cmake")
+endif()
+
+# These are IMPORTED targets created by DuneTriggersTargets.cmake
+# set(DUNETRIGGERS_LIBRARIES DuneTriggers SupernovaTrigger)
+set(DUNETRIGGERS_LIBRARIES SupernovaTrigger)
+# set(DUNETRIGGERS_EXECUTABLE )

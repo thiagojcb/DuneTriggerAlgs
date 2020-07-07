@@ -1,11 +1,16 @@
-#include "trivial/TriggerCandidateMaker_trivial.hh"
-#include "supernova/TriggerCandidateMaker_supernova.hh"
+#include "dune-triggers/Trivial/TriggerCandidateMaker_Trivial.hh"
+#include "dune-triggers/Trivial/TriggerDecisionMaker_Trivial.hh"
+#include "dune-triggers/Supernova/TriggerCandidateMaker_Supernova.hh"
+#include <string>
 
 int main()
 {
-  TriggerCandidateMakerTrivial trivial;
+  std::string s;
+  TriggerCandidateMakerTrivial trivial(s);
   (void) trivial;
-  TriggerCandidateMakerSupernova super;
+  TriggerDecisionMakerTrivial trivial2(s);
+  (void) trivial2;
+  TriggerCandidateMakerSupernova super(s);
   (void) super;
   
   return 0;
