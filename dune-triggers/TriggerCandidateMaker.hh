@@ -1,4 +1,5 @@
 #pragma once
+#include "includes/json.hpp"
 #include "TriggerPrimitive.hh"
 #include "TriggerCandidate.hh"
 #include <vector>
@@ -11,7 +12,7 @@ namespace DuneTriggers {
 
     virtual void operator()(const TriggerPrimitive& input_tp, std::vector<TriggerCandidate>& output_tc) = 0;
 
-    virtual bool GetLastCluster(TriggerCandidate& tc) const {
+    virtual bool GetLastCluster(TriggerCandidate&) const {
       return false;
     };
   };

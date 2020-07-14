@@ -14,5 +14,5 @@ endif()
 
 # These are IMPORTED targets created by DuneTriggersTargets.cmake
 # set(DUNETRIGGERS_LIBRARIES DuneTriggers SupernovaTrigger)
-set(DUNETRIGGERS_LIBRARIES SupernovaTrigger)
+set(DUNETRIGGERS_LIBRARIES @ALL_LIBS@)
 # set(DUNETRIGGERS_EXECUTABLE )

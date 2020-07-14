@@ -1,8 +1,10 @@
 #pragma once
+#include "includes/json.hpp"
 #include "TriggerCandidate.hh"
 #include "TriggerDecision.hh"
 #include <vector>
 #include <string>
+
 namespace DuneTriggers {
   class TriggerDecisionMaker {
   public:

@@ -1,5 +1,6 @@
-#include "dune-triggers/Supernova/TriggerCandidateMaker_Supernova.hh"
+#include "TriggerCandidateMaker_Supernova.hh"
 
+using namespace DuneTriggers;
 
 void TriggerCandidateMakerSupernova::operator()(const TriggerPrimitive& input_tp,
                                                 std::vector<TriggerCandidate>& output_tc) {

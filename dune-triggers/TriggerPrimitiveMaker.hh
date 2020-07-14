@@ -1,7 +1,9 @@
 #pragma once
+#include "includes/json.hpp"
 #include "TriggerPrimitive.hh"
 #include <vector>
 #include <string>
+
 namespace DuneTrigger {
   class TriggerPrimitiveMaker {
   public:
