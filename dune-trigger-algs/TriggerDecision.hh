@@ -1,8 +1,7 @@
 #pragma once
-#include <bitset>
 #include <cstdint>
 
-namespace DuneTriggers {
+namespace DuneTriggerAlgs {
   struct TriggerDecision {
     int64_t  time_start     = {0}; 
     int64_t  time_end       = {0};

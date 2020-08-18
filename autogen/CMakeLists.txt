@@ -14,6 +14,7 @@ foreach(INC_ALGO ${ALGS_H})
   add_executable(${EXECNAME} ${EXECNAME}.cxx)
 
   target_include_directories(${EXECNAME} PUBLIC ${PROJECT_SOURCE_DIR})
+  target_include_directories(${EXECNAME} PUBLIC ${PROJECT_SOURCE_DIR}/includes)
   
   target_link_libraries(${EXECNAME} PUBLIC ${ALGOLIBNAME}) 
   

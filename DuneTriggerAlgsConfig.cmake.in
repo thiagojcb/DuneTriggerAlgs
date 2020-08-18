@@ -1,0 +1,9 @@
+# - Config file for the DuneTriggers package
+# It defines the following variables
+#  DUNETRIGGERALGS_INCLUDES  - include directories for DuneTriggerAlgs
+#  DUNETRIGGERALGS_LIBRARIES - libraries to link against
+@PACKAGE_INIT@
+
+# Compute paths
+set_and_check(DUNETRIGGERALGS_INCLUDES "@PACKAGE_INCLUDES_INSTALL@")
+set_and_check(DUNETRIGGERALGS_LIBRARIES "@PACKAGE_LIBRARIES_INSTALL@")

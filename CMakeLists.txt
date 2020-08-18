@@ -1,51 +1,14 @@
 cmake_minimum_required(VERSION 3.13)
 
-project(DuneTrigger)
+project(DuneTriggerAlgs)
+include(CMakePackageConfigHelpers)
+set(DUNETRIGGERALGS_MAJOR_VERSION "0")
+set(DUNETRIGGERALGS_MINOR_VERSION "0")
+set(DUNETRIGGERALGS_PATCH_VERSION "0")
+set(DUNETRIGGERALGS_VERSION ${DUNETRIGGERALGS_MAJOR_VERSION}_${DUNETRIGGERALGS_MINOR_VERSION}_${DUNETRIGGERALGS_PATCH_VERSION})
 
-set(DUNETRIGGER_MAJOR_VERSION "0")
-set(DUNETRIGGER_MINOR_VERSION "0")
-set(DUNETRIGGER_PATCH_VERSION "0")
-set(DUNETRIGGER_VERSION ${DUNETRIGGER_MAJOR_VERSION}_${DUNETRIGGER_MINOR_VERSION}_${DUNETRIGGER_PATCH_VERSION})
-
-# # Offer the user the choice of overriding the installation directories
-# set(INSTALL_LIB_DIR lib CACHE PATH "Installation directory for libraries")
-# set(INSTALL_BIN_DIR bin CACHE PATH "Installation directory for executables")
-# set(INSTALL_INCLUDE_DIR include CACHE PATH "Installation directory for header files")
-
-# set(DEF_INSTALL_CMAKE_DIR CMake)
-
-# set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH "Installation directory for CMake files")
-
-# # make relative paths absolute (needed later on)
-# foreach(p LIB BIN INCLUDE CMAKE)
-#   set(var INSTALL_${p}_DIR)
-#   if(NOT IS_ABSOLUTE "${${var}}")
-#     set(${var} "${CMAKE_INSTALL_PREFIX}/${${var}}")
-#   endif()
-# endforeach()
-
-# # set up include-directories
-# include_directories("${PROJECT_SOURCE_DIR}")
-
-
-# # SETUP BOOST
-# execute_process(COMMAND ${LSB_RELEASE_EXEC} -is
-#   OUTPUT_VARIABLE LSB_RELEASE_ID_SHORT
-#   OUTPUT_STRIP_TRAILING_WHITESPACE
-#   )
-
-# # if the distribution is scientific linux, then setup boost in a different way (not using the cmake file from boost)
-# string(FIND "${LSB_RELEASE_ID_SHORT}" "Scientific" _cmp)
-# if (_cmp GREATER -1)
-#   set(Boost_NO_BOOST_CMAKE ON)
-# else()
-#   string(CONCAT CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} " -std=c++1y")
-# endif()
-
-# find_package(Boost REQUIRED)
-# set(BOOST_INCLUDE_DIRS $boost_installation_prefix/include)
-# find_package(Threads REQUIRED)
-
+set(LIBRARIES_INSTALL "lib")
+set(INCLUDES_INSTALL "include")
 
 function(get_last_dir FILEPATH)
   # This function get the latest directory name before the file
@@ -70,6 +33,22 @@ endfunction()
 
 function (glob_carefully FILEPATH REGEX RET)
   file(GLOB FILES "${FILEPATH}/${REGEX}")
+  
+  foreach (F ${FILES})
+    string(REGEX MATCH ".*~" CHECK ${F})
+
+    if (NOT CHECK STREQUAL "")
+      list(REMOVE_ITEM FILES ${F})
+    endif()
+  endforeach()
+  
+  set(${RET} ${FILES} PARENT_SCOPE)
+endfunction()
+
+function (glob_recursive_relat_carefully FILEPATH REGEX RET)
+  file(GLOB_RECURSE FILES
+    RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
+    "${FILEPATH}/${REGEX}")
   
   foreach (F ${FILES})
     string(REGEX MATCH ".*~" CHECK ${F})
@@ -112,10 +91,6 @@ function (set_alg_type_name_lib FILEPATH)
     return()
   endif ()
 
-  list(LENGTH ${CLASSDEF} SIZE_)
-  # REALLY DONT UNDERSTAND WHY THIS DOESNT RETURN THE NUMBER OF MATCHES
-  # IGNORE FOR NOW
-  
   string(REGEX MATCH "public[ \t\r\n]*Trigger.*Maker"
     ALGOTYPE "${CLASSDEF}"
     )
@@ -125,22 +100,21 @@ function (set_alg_type_name_lib FILEPATH)
     )
 
   string(LENGTH ${ALGOTYPE} L)
-   # "trigger" has 7 letters and "maker" has 5 letters, such ugly syntax
+
+  # "trigger" has 7 letters and "maker" has 5 letters, such ugly syntax
   math(EXPR L "${L}-7-5")
 
   string(SUBSTRING ${ALGOTYPE} 7 ${L} ALGOTYPE)
   # NOW WE HAVE THE TYPE (Candidate, Primitive, Decision) OF THE ALGORITHM
   
-
   string(REGEX MATCH "class.*:" ALGONAME ${CLASSDEF})
 
   string(REGEX REPLACE "[ \n\t\r]" "" ALGONAME ${ALGONAME} )
   string(LENGTH ${ALGONAME} L)
   math(EXPR L "${L}-1-5") # "class" has 5 letters + 1 letter for the semicolon
   string(SUBSTRING ${ALGONAME} 5 ${L} ALGONAME)
+
   # GREAT! NOW WE HAVE THE NAME OF THE ALGORITHM
-
-
   get_filename_component(DIRNAME ${FILEPATH} DIRECTORY)
   get_libname(${DIRNAME})
 
@@ -172,102 +146,49 @@ function (add_dune_trigger_lib)
 
     get_last_dir(${CMAKE_CURRENT_SOURCE_DIR})
     
-    
     target_include_directories(${ALGOLIBNAME} PUBLIC
       $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
-      $<INSTALL_INTERFACE:include/>
+      $<INSTALL_INTERFACE:${INCLUDES_INSTALL}/>
       )
+
     target_compile_options(${ALGOLIBNAME} PRIVATE -Wall -Wextra -pedantic -Werror)
 
     install(TARGETS ${ALGOLIBNAME}
-      EXPORT DuneTriggersTargets
-      LIBRARY DESTINATION lib
-      PUBLIC_HEADER DESTINATION include
+      EXPORT DuneTriggerAlgsTargets
+      LIBRARY DESTINATION ${LIBRARIES_INSTALL}
+      PUBLIC_HEADER DESTINATION ${INCLUDES_INSTALL}/dune-triggers-algs/${ALGOLIBNAME}
       )
 
   else()
-    ## CANT GET THIS TO WORK.
-    ## DOING IT THE UGLY WAY @E#*)&1$%!!
-    #   # This is the standard case, header only files -> we create an "interface library"
+    # This is the standard case, header only files -> we create an "interface library"
     add_library(${ALGOLIBNAME} INTERFACE)
     message(STATUS "Created INTERFACE (empty) lib: " ${ALGOLIBNAME})
-    
-    #   target_link_libraries(${ALGOLIBNAME} INTERFACE DuneTriggers)
 
-    #   message(STATUS "Created INTERFACE lib: " ${ALGOLIBNAME})
-
-    #   get_last_dir(${CMAKE_CURRENT_SOURCE_DIR})
-
-    #   foreach (H ${HH_FILES})
-    #     string (REGEX REPLACE "${CMAKE_CURRENT_SOURCE_DIR}/" "" H_RELAT ${H})
-    #     message(STATUS "${H} -> ${H_RELAT}")
-    #     list(APPEND HH_FILES_RELAT ${H_RELAT})
-    #   endforeach()
-    
-    #   foreach (H ${HH_FILES_RELAT})
-    #     message(STATUS "${H} -> realt")
-    #   endforeach()
-    
-    #   target_sources(${ALGOLIBNAME} INTERFACE
-    #     $<BUILD_INTERFACE:${HH_FILES_RELAT}>
-    #     $<INSTALL_INTERFACE:include/>
-    #     )
-    
-    #   target_include_directories(${ALGOLIBNAME} INTERFACE
-    #     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
-    #     $<INSTALL_INTERFACE:include/dune-triggers/${A}>
-    #     )
-    
-    #   target_compile_options(${ALGOLIBNAME} INTERFACE -Wall -Wextra -pedantic -Werror)
-    
-    #   install(TARGETS ${ALGOLIBNAME}
-    #     EXPORT DuneTriggersTargets
-    #     LIBRARY DESTINATION lib
-    #     PUBLIC_HEADER DESTINATION include
-    #     )p
+    install(FILES ${HH_FILES} DESTINATION ${INCLUDES_INSTALL}/dune-triggers-algs/${ALGOLIBNAME})
   endif()
 endfunction()
 
+glob_recursive_relat_carefully(${CMAKE_CURRENT_SOURCE_DIR}/dune-trigger-algs "*.h*" HEADERS)
 
-glob_carefully("dune-triggers"   "*.h*" BASE_H)
-glob_carefully("dune-triggers/*" "*.h*" ALGS_H)
+foreach(F ${HEADERS})
+  message(STATUS ${F})
+  get_filename_component(INC ${F} DIRECTORY)
+  install(FILES ${F} DESTINATION ${INCLUDES_INSTALL}/${INC})
+endforeach()
 
-install (FILES ${ALGS_H}
-  DESTINATION include
+CONFIGURE_PACKAGE_CONFIG_FILE(DuneTriggerAlgsConfig.cmake.in
+  ${CMAKE_CURRENT_BINARY_DIR}/DuneTriggerAlgsConfig.cmake
+  INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX}
+  PATH_VARS INCLUDES_INSTALL LIBRARIES_INSTALL
   )
 
-install (FILES ${BASE_H}
-  DESTINATION include
-  )
-
-add_subdirectory(dune-triggers)
+add_subdirectory(dune-trigger-algs)
 add_subdirectory(autogen)
 
-install(EXPORT DuneTriggersTargets DESTINATION ${CMAKE_INSTALL_PREFIX})
-# install(DIRECTORY dune-triggers DESTINATION ${CMAKE_INSTALL_PREFIX})
+install(EXPORT DuneTriggerAlgsTargets DESTINATION ${CMAKE_INSTALL_PREFIX})
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/DuneTriggerAlgsConfig.cmake
+  DESTINATION ${CMAKE_INSTALL_PREFIX}
+  )
 
-export(PACKAGE DuneTriggers)
 
-
-# # # Create the DuneTriggersConfig.cmake and DuneTriggersConfigVersion files
-# # file(RELATIVE_PATH REL_INCLUDE_DIR "${INSTALL_CMAKE_DIR}" "${INSTALL_INCLUDE_DIR}")
-
-# # ... for the build tree
-# set(CONF_INCLUDE_DIRS "${PROJECT_BINARY_DIR}")
-# configure_file(DuneTriggersConfig.cmake.in "${PROJECT_BINARY_DIR}/DuneTriggersConfig.cmake" @ONLY)
-
-# # ... for the install tree
-# set(CONF_INCLUDE_DIRS "\${DUNETRIGGERS_CMAKE_DIR}/${REL_INCLUDE_DIR}")
-# configure_file(DuneTriggersConfig.cmake.in "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/DuneTriggersConfig.cmake" @ONLY)
-
-# # ... for both
-# configure_file(DuneTriggersConfigVersion.cmake.in "${PROJECT_BINARY_DIR}/DuneTriggersConfigVersion.cmake" @ONLY)
-
-# # Install the DuneTriggersConfig.cmake and DuneTriggersConfigVersion.cmake
-# install(FILES
-#   "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/DuneTriggersConfig.cmake"
-#   "${PROJECT_BINARY_DIR}/DuneTriggersConfigVersion.cmake"
-#   DESTINATION "${INSTALL_CMAKE_DIR}" COMPONENT dev)
-
-# # Install the export set for use with the install-tree
-# install(EXPORT DuneTriggersTargets DESTINATION "${INSTALL_CMAKE_DIR}" COMPONENT dev)
+export(PACKAGE DuneTriggerAlgs)

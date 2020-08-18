@@ -1,14 +1,15 @@
 #pragma once
-#include "includes/json.hpp"
-#include "TriggerCandidate.hh"
-#include "TriggerDecision.hh"
+#include "dune-trigger-algs/TriggerCandidate.hh"
+#include "dune-trigger-algs/TriggerDecision.hh"
 #include <vector>
 #include <string>
 
-namespace DuneTriggers {
+namespace DuneTriggerAlgs {
+  
   class TriggerDecisionMaker {
   public:
-    TriggerDecisionMaker(std::string/* json*/) {};
     virtual void operator()(const TriggerCandidate& input_tc, std::vector<TriggerDecision>& output_tds) = 0;
+    virtual void flush(std::vector<TriggerDecision>&) {};
   };
+  
 }

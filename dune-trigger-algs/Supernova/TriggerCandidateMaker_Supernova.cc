@@ -1,6 +1,6 @@
-#include "TriggerCandidateMaker_Supernova.hh"
+#include "dune-trigger-algs/Supernova/TriggerCandidateMaker_Supernova.hh"
 
-using namespace DuneTriggers;
+using namespace DuneTriggerAlgs;
 
 void TriggerCandidateMakerSupernova::operator()(const TriggerPrimitive& input_tp,
                                                 std::vector<TriggerCandidate>& output_tc) {
@@ -8,6 +8,7 @@ void TriggerCandidateMakerSupernova::operator()(const TriggerPrimitive& input_tp
   int64_t tend = input_tp.time_start+input_tp.time_over_threshold;
     
   if (m_time_start==0) {
+    m_ntps          = 1;
     m_time_start    = input_tp.time_start;
     m_time_end      = tend;
     m_time_peak     = input_tp.time_peak;
@@ -25,7 +26,7 @@ void TriggerCandidateMakerSupernova::operator()(const TriggerPrimitive& input_tp
     
   if (not time_ok and not channel_ok) {
     output_tc.push_back(MakeTriggerCandidate());
-      
+    m_ntps          = 1;
     m_time_start    = input_tp.time_start;
     m_time_end      = tend;
     m_time_peak     = input_tp.time_peak;
@@ -56,6 +57,7 @@ void TriggerCandidateMakerSupernova::operator()(const TriggerPrimitive& input_tp
   if (input_tp.channel < m_channel_start)
     m_channel_start = input_tp.channel;
     
+  m_ntps += 1;
   m_adc_integral += input_tp.adc_integral;
   m_detid        |= input_tp.detid;
 }
