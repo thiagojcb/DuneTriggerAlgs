@@ -4,10 +4,26 @@ linked inside ArtDAQ and LArSoft, so that we can run the exact same
 code in simulation and on real data.
 
 ### TOC
+ - [Future](#future)
  - [Organisation](#organisation)
  - [Compile](#compile)
  - [Contribute](#contribute)
  - [Data structures](#structs)
+
+<a name="future">
+
+## Future interesting things to do
+ - Make it compatible with the new schema for triggering (rather than having TPs, TCs, TDs have TPs, TAs, TCs, TDs) *NB: my understanding of how things work*:
+   - new TAs = TC now, (APA level)
+   - new TCs = TDs now, (?? level, module level?)
+   - new TDs = spits back TCs in the case of SN where you only have one type of TCs. (module level).
+ - Make the whole setup more realistic
+   - TPs from PDFs of what we expect from LArSoft/simulations
+   - TAs algorithm better
+ - Find a way to estimate the efficiency for TAs and TCs.
+ - Implementation of "TP window" and "TP zipper":
+   - TP window = something that ensures that the TPs are all in a time window,
+   - TP zipper = something that merges source of TPs.
 
 
 <a name="organisation"/>
