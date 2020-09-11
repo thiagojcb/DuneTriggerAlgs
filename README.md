@@ -36,20 +36,22 @@ code in simulation and on real data.
 The code is quite simple. Essentially, the trigger algorithm rely on 3
 structs:
  - `TriggerPrimitive` (also known as hits)
- - `TriggerCandidate` (clusters)
- - `TriggerDecision`
+ - `TriggerActivity` (clusters)
+ - `TriggerCandidate` (I think we should trigger)
+ - `TriggerDecision` (readout request)
  
 Their format will be discussed at a DAQ meeting and fixed at some point.
 
 The trigger primitives are created within ArtDAQ or LArSoft. These are
-passed to one or more `TriggerCandidateMaker` classes which create the
-`TriggerCandidates`. The `TriggerCandidates` are then passed on to one
-or more `TriggerDecisionMaker` classes, which create the
-decisions. Each rely on their pure virtual operator:
- - `void TriggerCandidateMaker::operator()(const TriggerPrimitive& input_tp, std::vector<TriggerCandidate>& output_tc)`
- - `void TriggerDecisionMaker::operator()(const TriggerCandidate& input_tp, std::vector<TriggerDecision>& output_tc)`
+passed to one or more `TriggerActivityMaker` classes which create the
+`TriggerActivity`. The `TriggerActivity` are then passed on to one
+or more `TriggerCandidateMaker` classes, which create the
+candidates, which in turn will be fed to `TriggerDecisionMaker`, etc. Each rely on their pure virtual operator:
+ - `void TriggerActivityMaker ::operator()(const TriggerPrimitive& input_tp, std::vector<TriggerActivity >& output_ta)`
+ - `void TriggerCandidateMaker::operator()(const TriggerActivity& input_ta , std::vector<TriggerCandidate>& output_tc)`
+ - `void TriggerDecisionMaker ::operator()(const TriggerCandidate& input_tc, std::vector<TriggerDecision >& output_td)`
 
-that any `TriggerCandidateMaker` and
+that any `TriggerActivityMaker`, `TriggerCandidateMaker` and
 `TriggerDecisionMaker` need to implement, respectively.
 
 Note the TPs can also be created here, but given how this happens now
@@ -70,28 +72,27 @@ system. The "makers" get input data, rearrange it, and then
 a `exec/run_trivial_candidate.cxx`, which creates fake TPs, feeds
 them into it and then dumps them in a csv.
 
-Note none the granularity of the `TriggerCandidateMaker` and
-`TriggerDecisionMaker` isn't be decided here.  It is the ArtDAQ (and
-LArSoft)'s developers' job to decided how many
+Note none the granularity of the `TriggerActivityMaker`,
+`TriggerCandidateMaker` and `TriggerDecisionMaker` isn't be decided here. 
+It is the ArtDAQ's developers' job to decided how many
 `TriggerCandidateMakers` there should be in one APA for example. The
-focus of this library is the algorithm, ArtDAQ and LArSoft should
-create and handle the DuneTriggers objects and the calls to them. The
-classes `NaiveTriggerQueue` and `NaiveTriggerCandidateConsumer` that
-`run_trivial_candidate.cxx` are indicative.
+focus of this library is the algorithm, ArtDAQ should
+create and handle the DuneTriggers objects and the calls to them (this is realised in DAQDuneTriggers)
 
 <a name="compile"/>
 
 ## To compile it
-You need to have the boost libraries for testing.
+You need to have the boost libraries for testing (this dependency will be dropped soon, we don't need it)
 ```
 git clone https://github.com/plasorak/DuneTriggerAlgs.git
 cd DuneTriggerAlgs
 mkdir build
 cd build
-cmake ../
+export DUNETRIGGERALGS_DIR=$(pwd)/../install # this is for DAQDuneTrigger to know where this install is.
+cmake -DCMAKE_INSTALL_PREFIX=${DUNETRIGGERALGS_DIR} ../
 make -j`nproc`
+make install # to move all the insteresting stuff in ${DUNETRIGGERALGS_DIR}
 ctest # if you want to run the tests, right now it doesn't do anything interesting
-export DUNETRIGGERALGS_DIR=$(pwd) # this is for DAQDuneTrigger to know where this install is.
 ```
 
 <a name="contribute"/>
@@ -106,38 +107,61 @@ Note all the times here refer to 50 MHz clock (since epoch), as is now standard 
 
 ### TriggerPrimitive
 This struct represent hits, it contains:
-| Variable              | Type       | Comment                                                          |
-|-----------------------|------------|------------------------------------------------------------------|
-| `time_start`          | `int64_t`  | Start time                                                       |
-| `time_peak`           | `int64_t`  | Time of the peak ADC                                             |
-| `time_over_threshold` | `int32_t`  | Time over threshold                                              |
-| `channel`             | `uint32_t` | Channel number                                                   |
-| `adc_integral`        | `uint16_t` | ADC integral                                                     |
-| `adc_peak`            | `uint16_t` | ADC peak                                                         |
-| `detid`               | `uint32_t` | detid (a flag that represents the detector which created the TP) |
-| `flag`                | `uint32_t` | extra flags                                                      |
+| Variable              | Type       | Comment                                                                   |
+|-----------------------|------------|---------------------------------------------------------------------------|
+| `time_start`          | `int64_t`  | Start time                                                                |
+| `time_peak`           | `int64_t`  | Time of the peak ADC                                                      |
+| `time_over_threshold` | `int32_t`  | Time over threshold                                                       |
+| `channel`             | `uint32_t` | Channel number                                                            |
+| `adc_integral`        | `uint16_t` | ADC integral                                                              |
+| `adc_peak`            | `uint16_t` | ADC peak (could be 12 bits, strictly)                                     |
+| `detid`               | `uint32_t` | detid (a flag that represents the detector which created the TP)          |
+| `type`                | `uint32_t` | some flag that says what it think it is (PDS/TPC for example)             |
+| `algorithm`           | `uint32_t` | some flag that says which algorithm created it (CPU/Firmware for example) |
+| `version`             | `uint16_t` | version of above                                                          |
+| `flag`                | `uint32_t` | extra flags.                                                              |
 
-### TriggerCandidate
+### TriggerActivity
 Represents a cluster of hits, it contains:
-| Variable        | Type       | Comment                                                         |
-|-----------------|------------|-----------------------------------------------------------------|
-| `time_start`    | `int64_t`  | Start time                                                      |
-| `time_end`      | `int64_t`  | End time                                                        |
-| `time_peak`     | `int64_t`  | Time where ADC the highest                                      |
-| `channel_start` | `uint32_t` | Start channel                                                   |
-| `channel_end`   | `uint32_t` | End channel                                                     |
-| `channel_peak`  | `uint32_t` | Channel of the highest ADC                                      |
-| `adc_integral`  | `uint16_t` | ADC integral                                                    |
-| `adc_peak`      | `uint16_t` | ADC peak                                                        |
-| `detid`         | `uint32_t` | detid (a flag that represents the detector in which it ocurred) |
-| `flag`          | `uint32_t` | extra flags                                                     |
+| Variable        | Type                            | Comment                                                                                   |
+|-----------------|---------------------------------|-------------------------------------------------------------------------------------------|
+| `time_start`    | `int64_t`                       | Start time                                                                                |
+| `time_end`      | `int64_t`                       | End time                                                                                  |
+| `time_peak`     | `int64_t`                       | Time where ADC the highest                                                                |
+| `time_formed`   | `int64_t`                       | Time at which the object was created (maybe we don't need that?)                          |
+| `channel_start` | `uint32_t`                      | Start channel                                                                             |
+| `channel_end`   | `uint32_t`                      | End channel                                                                               |
+| `channel_peak`  | `uint32_t`                      | Channel of the highest ADC                                                                |
+| `adc_integral`  | `uint16_t`                      | ADC integral                                                                              |
+| `adc_peak`      | `uint16_t`                      | ADC peak (could be 12 bits, strictly)                                                     |
+| `detid`         | `uint32_t`                      | detid (a flag that represents the detector in which it ocurred)                           |
+| `type`          | `uint32_t`                      | some flag that says what it think it is (Argon39/Muon for example)                        |
+| `algorithm`     | `uint32_t`                      | some flag that says which algorithm created it (PDS/TPS/SN/high energy/solar for example) |
+| `version`       | `uint16_t`                      | version of above                                                                          |
+| `tp_list`       | `std::vector<TriggerPrimitive>` | the list of TPs that was used to create it                                                |
  
+### TriggerCandidate
+contains a trigger "request" (i.e. please trigger). In this case, it's based on activity in the detector, but it could be external trigger as well, if one removes the `ta_list`:
+| Variable       | Type                           | Comment                                                                           |
+|----------------|--------------------------------|-----------------------------------------------------------------------------------|
+| `time_start`   | `int64_t`                      | Time at which to start the readout                                                |
+| `time_end`     | `int64_t`                      | Time at which to end the readout                                                  |
+| `time_decided` | `int64_t`                      | Time at which this decision was taken                                             |
+| `detid`        | `uint32_t`                     | some flag that represents which part of the detector to readout                   |
+| `type`         | `uint32_t`                     | some flag that says what it think it is (SN/Muon/Beam for example)                |
+| `algorithm`    | `uint32_t`                     | some flag that says which algorithm created it (SN/high energy/solar for example) |
+| `version`      | `uint16_t`                     | version of above                                                                  |
+| `ta_list`      | `std::vector<TriggerActivity>` | the list of TAs that was used to create it                                        |
+
 ### TriggerDecision
-contains:
-| Variable         | Type       | Comment                                                              |
-|------------------|------------|----------------------------------------------------------------------|
-| `time_start`     | `int64_t`  | Time at which to start the readout                                   |
-| `time_end`       | `int64_t`  | Time at which to end the readout                                     |
-| `time_triggered` | `int64_t`  | Time at which this decision was taken                                |
-| `detid`          | `uint32_t` | detid (a flag that represents which part of the detector to readout) |
-| `flag`           | `uint32_t` | extra flags                                                          |
+contains a readout request (i.e. you MUST trigger), based on all the candidates in the detector:
+| Variable         | Type                            | Comment                                                                                               |
+|------------------|---------------------------------|-------------------------------------------------------------------------------------------------------|
+| `time_start`     | `int64_t`                       | Time at which to start the readout                                                                    |
+| `time_end`       | `int64_t`                       | Time at which to end the readout                                                                      |
+| `time_triggered` | `int64_t`                       | Time at which this decision was taken                                                                 |
+| `detid`          | `uint32_t`                      | some flag that represents which part of the detector to readout                                       |
+| `type`           | `uint32_t`                      | some flag that says what it think it is (SN/Muon/Beam for example)                                    |
+| `algorithm`      | `uint32_t`                      | some flag that says which algorithm created it (although I think there will only ever be one of this) |
+| `version`        | `uint16_t`                      | version of above                                                                                      |
+| `tc_list`        | `std::vector<TriggerCandidate>` | the list of TCs that was used to create it                                                            |
