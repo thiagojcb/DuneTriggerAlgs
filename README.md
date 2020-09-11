@@ -84,13 +84,14 @@ classes `NaiveTriggerQueue` and `NaiveTriggerCandidateConsumer` that
 ## To compile it
 You need to have the boost libraries for testing.
 ```
-git clone https://github.com/plasorak/DuneTriggers.git
-cd DuneTriggers
+git clone https://github.com/plasorak/DuneTriggerAlgs.git
+cd DuneTriggerAlgs
 mkdir build
 cd build
 cmake ../
 make -j`nproc`
 ctest # if you want to run the tests, right now it doesn't do anything interesting
+export DUNETRIGGERALGS_DIR=$(pwd) # this is for DAQDuneTrigger to know where this install is.
 ```
 
 <a name="contribute"/>
