@@ -1,63 +1,38 @@
 #include "dune-trigger-algs/Supernova/TriggerCandidateMaker_Supernova.hh"
 
+#include <algorithm>
+#include <limits>
+#include <chrono>
+
 using namespace DuneTriggerAlgs;
+using pd_clock = std::chrono::duration<double, std::ratio<1, 50'000'000>>;
 
-void TriggerCandidateMakerSupernova::operator()(const TriggerPrimitive& input_tp,
-                                                std::vector<TriggerCandidate>& output_tc) {
+void TriggerCandidateMakerSupernova::operator()(const TriggerActivity& cand,
+                                               std::vector<TriggerCandidate>& decisions) {
+  int64_t time = cand.time_start;
+  FlushOldActivity(time); // get rid of old clusters in the buffer
+  if (cand.tp_list.size()>m_hit_threshold)
+    m_cluster.push_back(cand);
 
-  int64_t tend = input_tp.time_start+input_tp.time_over_threshold;
+  // Yay! we have a trigger!
+  if (m_cluster.size() > m_threshold) {
+    std::chrono::time_point<std::chrono::steady_clock> now;
+
+    // set all bits to one (probably this will mean down the line: "record every part of the detector")
+    uint32_t detid = 0xFFFFFFFF;
     
-  if (m_time_start==0) {
-    m_ntps          = 1;
-    m_time_start    = input_tp.time_start;
-    m_time_end      = tend;
-    m_time_peak     = input_tp.time_peak;
-    m_channel_start = input_tp.channel;
-    m_channel_end   = input_tp.channel;
-    m_channel_peak  = input_tp.channel;
-    m_adc_integral  = input_tp.adc_integral;
-    m_adc_peak      = input_tp.adc_peak;
-    m_detid         = input_tp.detid;
+    TriggerCandidate trigger {time - 500'000'000, // time_start (10 seconds before the start of the cluster)
+                             cand.time_end, // time_end, but that should probably be _at least_ this number
+                             int64_t(pd_clock(now.time_since_epoch()).count()), // this is now in dune time, with a cast to avoid narrowing warning
+                             detid, // all the detector
+	                     0, //type ( flag that says what type of trigger might be (e.g. SN/Muon/Beam) )
+	                     0, //algorithm ( flag that says which algorithm created the trigger (e.g. SN/HE/Solar) )
+	                     0, //version of the above
+                             m_cluster}; // TAs used to form this trigger candidate
+    m_cluster.clear();
+    // Give the trigger word back
+    decisions.push_back(trigger);
     return;
   }
-    
-  bool time_ok = is_time_consistent(input_tp);
-  bool channel_ok = is_channel_consistent(input_tp);
-    
-  if (not time_ok and not channel_ok) {
-    output_tc.push_back(MakeTriggerCandidate());
-    m_ntps          = 1;
-    m_time_start    = input_tp.time_start;
-    m_time_end      = tend;
-    m_time_peak     = input_tp.time_peak;
-    m_channel_start = input_tp.channel;
-    m_channel_end   = input_tp.channel;
-    m_channel_peak  = input_tp.channel;
-    m_adc_integral  = input_tp.adc_integral;
-    m_adc_peak      = input_tp.adc_peak;
-    m_detid         = input_tp.detid;
-    return;
-  }
-
-  if (input_tp.time_start < m_time_start)
-    m_time_start = input_tp.time_start;
-
-  if (tend > m_time_end)
-    m_time_end = tend;
-
-  if (input_tp.adc_peak > m_adc_peak) {
-    m_time_peak    = input_tp.time_peak;
-    m_adc_peak     = input_tp.adc_peak;
-    m_channel_peak = input_tp.channel;
-  }
-
-  if (input_tp.channel > m_channel_end)
-    m_channel_end = input_tp.channel;
-    
-  if (input_tp.channel < m_channel_start)
-    m_channel_start = input_tp.channel;
-    
-  m_ntps += 1;
-  m_adc_integral += input_tp.adc_integral;
-  m_detid        |= input_tp.detid;
+  
 }

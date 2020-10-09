@@ -10,6 +10,9 @@ namespace DuneTriggerAlgs {
     uint16_t adc_integral        = {0};
     uint16_t adc_peak            = {0};
     uint32_t detid               = {0};
+    uint32_t type                = {0};
+    uint32_t algorithm           = {0};
+    uint16_t version             = {0};
     uint32_t flag                = {0};
   };
 }
