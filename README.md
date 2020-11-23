@@ -14,11 +14,11 @@ code in simulation and on real data.
 
 ## Future interesting things to do
  - Improve documentation!!
- - Make it compatible with the new schema for triggering (rather than having TPs, TCs, TDs have TPs, TAs, TCs, TDs) *NB: my understanding of how things work*:
+ - (**DONE**) Make it compatible with the new schema for triggering (rather than having TPs, TCs, TDs have TPs, TAs, TCs, TDs) *NB: my understanding of how things work*:
    - new TAs = TC now, (APA level)
    - new TCs = TDs now, (?? level, module level?)
    - new TDs = spits back TCs in the case of SN where you only have one type of TCs. (module level).
- - Expend data objects
+ - (**DONE**) Expend data objects
    - Something that can "trace back" TPs from TAs
    - Add flags that say what object it is (version of the algorithm, TCs what trigger it is)
  - Make the whole setup more realistic
