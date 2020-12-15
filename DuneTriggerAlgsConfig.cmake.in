@@ -1,9 +1,13 @@
-# - Config file for the DuneTriggers package
-# It defines the following variables
-#  DUNETRIGGERALGS_INCLUDES  - include directories for DuneTriggerAlgs
-#  DUNETRIGGERALGS_LIBRARIES - libraries to link against
+
 @PACKAGE_INIT@
 
-# Compute paths
-set_and_check(DUNETRIGGERALGS_INCLUDES "@PACKAGE_INCLUDES_INSTALL@")
-set_and_check(DUNETRIGGERALGS_LIBRARIES "@PACKAGE_LIBRARIES_INSTALL@")
+include(CMakeFindDependencyMacro)
+
+# Insert find_dependency() calls for your package's dependencies in
+# the place of this comment. Make sure they match up with the
+# find_package calls in your package's CMakeLists.txt file
+
+set_and_check(targets_file ${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake)
+include(${targets_file})
+
+check_required_components(@PROJECT_NAME@)
