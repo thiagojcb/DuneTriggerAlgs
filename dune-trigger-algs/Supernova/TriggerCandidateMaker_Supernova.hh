@@ -16,9 +16,9 @@ namespace DuneTriggerAlgs {
     
   protected:
     std::vector<TriggerActivity> m_activity;
-    std::atomic<int64_t > m_time_window   = {500'000'000};
-    std::atomic<uint16_t> m_threshold     = {6};
-    std::atomic<uint16_t> m_hit_threshold = {3};
+    std::atomic<int64_t > m_time_window   = {500'000'000};   /// Slinding time window to count activities
+    std::atomic<uint16_t> m_threshold     = {6};             /// Minimum number of activities in the time window to issue a trigger
+    std::atomic<uint16_t> m_hit_threshold = {3};             /// Minimum number of primities in an activity
 
 
     /// this function gets rid of the old activities

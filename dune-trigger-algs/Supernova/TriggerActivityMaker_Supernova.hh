@@ -8,7 +8,7 @@ namespace DuneTriggerAlgs {
   class TriggerActivityMakerSupernova: public TriggerActivityMaker {
 
   
-    /// This candidate maker makes a candidate with all the trigger primitives
+    /// This activity maker makes an activity with all the trigger primitives
     inline bool is_time_consistent(const TriggerPrimitive& input_tp) const {
     
       int64_t tend = input_tp.time_start+input_tp.time_over_threshold;
@@ -62,8 +62,8 @@ namespace DuneTriggerAlgs {
       return ta;
     }
     
-    int64_t  m_time_tolerance    = 10*25;
-    int32_t  m_channel_tolerance = 2;
+    int64_t  m_time_tolerance    = 10*25;  /// Maximum tolerated time difference between two primitives to form an activity
+    int32_t  m_channel_tolerance = 2;      /// Maximum tolerated channel number difference between two primitives to form an activity
     int64_t  m_time_start        = 0;
     int64_t  m_time_end          = 0;
     int64_t  m_time_peak         = 0;
