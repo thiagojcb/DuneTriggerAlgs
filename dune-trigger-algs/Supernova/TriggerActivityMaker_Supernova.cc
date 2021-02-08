@@ -8,6 +8,8 @@ void TriggerActivityMakerSupernova::operator()(const TriggerPrimitive& input_tp,
   int64_t tend = input_tp.time_start+input_tp.time_over_threshold;
     
   if (m_time_start==0) {
+    m_tp_list.erase(m_tp_list.begin(), m_tp_list.end());
+    m_tp_list.push_back(input_tp);
     m_time_start    = input_tp.time_start;
     m_time_end      = tend;
     m_time_peak     = input_tp.time_peak;
@@ -25,6 +27,8 @@ void TriggerActivityMakerSupernova::operator()(const TriggerPrimitive& input_tp,
     
   if (not time_ok and not channel_ok) {
     output_ta.push_back(MakeTriggerActivity());
+    m_tp_list.erase(m_tp_list.begin(), m_tp_list.end());
+    m_tp_list.push_back(input_tp);
     m_time_start    = input_tp.time_start;
     m_time_end      = tend;
     m_time_peak     = input_tp.time_peak;
