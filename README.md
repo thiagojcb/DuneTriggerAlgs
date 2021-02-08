@@ -14,13 +14,6 @@ code in simulation and on real data.
 
 ## Future interesting things to do
  - Improve documentation!!
- - (**DONE**) Make it compatible with the new schema for triggering (rather than having TPs, TCs, TDs have TPs, TAs, TCs, TDs) *NB: my understanding of how things work*:
-   - new TAs = TC now, (APA level)
-   - new TCs = TDs now, (?? level, module level?)
-   - new TDs = spits back TCs in the case of SN where you only have one type of TCs. (module level).
- - (**DONE**) Expend data objects
-   - Something that can "trace back" TPs from TAs
-   - Add flags that say what object it is (version of the algorithm, TCs what trigger it is)
  - Make the whole setup more realistic
    - TPs from PDFs of what we expect from LArSoft/simulations
    - TAs algorithm better
@@ -37,8 +30,8 @@ The code is quite simple. Essentially, the trigger algorithm rely on 3
 structs:
  - `TriggerPrimitive` (also known as hits)
  - `TriggerActivity` (clusters)
- - `TriggerCandidate` (I think we should trigger)
- - `TriggerDecision` (readout request)
+ - `TriggerCandidate` (trigger)
+ - `TriggerDecision` (readout request ?)
  
 Their format will be discussed at a DAQ meeting and fixed at some point.
 
@@ -84,7 +77,7 @@ create and handle the DuneTriggers objects and the calls to them (this is realis
 ## To compile it
 You need to have the boost libraries for testing (this dependency will be dropped soon, we don't need it)
 ```
-git clone https://github.com/plasorak/DuneTriggerAlgs.git
+git clone https://github.com/thiagojcb/DuneTriggerAlgs.git
 cd DuneTriggerAlgs
 mkdir build
 cd build
