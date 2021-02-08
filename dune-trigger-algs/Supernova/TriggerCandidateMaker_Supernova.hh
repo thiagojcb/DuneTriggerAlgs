@@ -24,10 +24,11 @@ namespace DuneTriggerAlgs {
     /// this function gets rid of the old activities
     void FlushOldActivity(int64_t time_now) {
       int64_t how_far = time_now - m_time_window;
-      std::remove_if(m_activity.begin(), m_activity.end(),
-                     [how_far, this] (auto& c) -> bool {
-                       return (c.time_start<how_far);
-                     });
+      auto end = std::remove_if(m_activity.begin(), m_activity.end(),
+				[how_far, this] (auto& c) -> bool {
+				  return (c.time_start<how_far);
+				});
+      m_activity.erase(end, m_activity.end());
     }
   };
   
