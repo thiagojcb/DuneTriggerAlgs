@@ -62,8 +62,8 @@ namespace DuneTriggerAlgs {
       return ta;
     }
     
-    int64_t  m_time_tolerance    = 10*25;  /// Maximum tolerated time difference between two primitives to form an activity
-    int32_t  m_channel_tolerance = 2;      /// Maximum tolerated channel number difference between two primitives to form an activity
+    int64_t  m_time_tolerance    = 250;  /// Maximum tolerated time difference between two primitives to form an activity (in 50 MHz clock ticks)
+    int32_t  m_channel_tolerance = 2;    /// Maximum tolerated channel number difference between two primitives to form an activity
     int64_t  m_time_start        = 0;
     int64_t  m_time_end          = 0;
     int64_t  m_time_peak         = 0;
