@@ -1,4 +1,4 @@
-# DuneTriggers
+# triggeralgs
 A place to put the trigger algorithms for DUNE. This code can then be
 linked inside ArtDAQ and LArSoft, so that we can run the exact same
 code in simulation and on real data.
@@ -70,21 +70,21 @@ Note none the granularity of the `TriggerActivityMaker`,
 It is the ArtDAQ's developers' job to decided how many
 `TriggerCandidateMakers` there should be in one APA for example. The
 focus of this library is the algorithm, ArtDAQ should
-create and handle the DuneTriggers objects and the calls to them (this is realised in DAQDuneTriggers)
+create and handle the DuneTriggers objects and the calls to them (this is realised in triggermodules)
 
 <a name="compile"/>
 
 ## To compile it
 You need to have the boost libraries for testing (this dependency will be dropped soon, we don't need it)
 ```
-git clone https://github.com/thiagojcb/DuneTriggerAlgs.git
-cd DuneTriggerAlgs
+git clone https://github.com/DUNE-DAQ/triggeralgs.git
+cd triggeralgs
 mkdir build
 cd build
-export DUNETRIGGERALGS_DIR=$(pwd)/../install # this is for DAQDuneTrigger to know where this install is.
-cmake -DCMAKE_INSTALL_PREFIX=${DUNETRIGGERALGS_DIR} ../
+export TRIGGERALGS_DIR=$(pwd)/../install # this is for triggermodules to know where this install is.
+cmake -DCMAKE_INSTALL_PREFIX=${TRIGGERALGS_DIR} ../
 make -j`nproc`
-make install # to move all the insteresting stuff in ${DUNETRIGGERALGS_DIR}
+make install # to move all the insteresting stuff in ${TRIGGERALGS_DIR}
 ctest # if you want to run the tests, right now it doesn't do anything interesting
 ```
 
