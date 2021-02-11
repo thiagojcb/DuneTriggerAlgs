@@ -5,7 +5,7 @@
 #include <limits>
 #include <atomic>
 
-namespace DuneTriggerAlgs {
+namespace triggeralgs {
   class TriggerCandidateMakerSupernova: public TriggerCandidateMaker {
     /// This decision maker just counts the number of activities in the time_window and triggers
     /// if the number of activities exceeds that.

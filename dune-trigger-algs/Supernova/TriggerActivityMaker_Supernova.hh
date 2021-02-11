@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <limits>
 
-namespace DuneTriggerAlgs {
+namespace triggeralgs {
   class TriggerActivityMakerSupernova: public TriggerActivityMaker {
 
   

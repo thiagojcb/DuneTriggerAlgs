@@ -4,7 +4,7 @@
 
 int main() {
   std::cout << "@ALGONAME@\n";
-  DuneTriggerAlgs::@ALGONAME@ a;
+  triggeralgs::@ALGONAME@ a;
   (void) a;
   return 0;
 }

@@ -5,7 +5,7 @@
 #include <limits>
 #include <atomic>
 
-namespace DuneTriggerAlgs {
+namespace triggeralgs {
   class TriggerDecisionMakerSupernova: public TriggerDecisionMaker {
     /// This decision maker just spits out the trigger candidates
     

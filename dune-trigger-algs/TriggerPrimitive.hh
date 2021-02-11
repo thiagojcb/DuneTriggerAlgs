@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-namespace DuneTriggerAlgs {
+namespace triggeralgs {
   struct TriggerPrimitive {
     int64_t  time_start          = {0};
     int64_t  time_peak           = {0};

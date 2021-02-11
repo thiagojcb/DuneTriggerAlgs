@@ -3,7 +3,7 @@
 #include <vector>
 #include "dune-trigger-algs/TriggerCandidate.hh"
 
-namespace DuneTriggerAlgs {
+namespace triggeralgs {
   struct TriggerDecision {
     int64_t  time_start     = {0}; 
     int64_t  time_end       = {0};

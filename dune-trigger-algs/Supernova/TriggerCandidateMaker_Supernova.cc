@@ -4,7 +4,7 @@
 #include <limits>
 #include <chrono>
 
-using namespace DuneTriggerAlgs;
+using namespace triggeralgs;
 using pd_clock = std::chrono::duration<double, std::ratio<1, 50'000'000>>;
 
 void TriggerCandidateMakerSupernova::operator()(const TriggerActivity& activity,

@@ -4,7 +4,7 @@
 #include <limits>
 #include <chrono>
 
-using namespace DuneTriggerAlgs;
+using namespace triggeralgs;
 
 void TriggerDecisionMakerSupernova::operator()(const TriggerCandidate& cand,
                                                std::vector<TriggerDecision>& decisions) {

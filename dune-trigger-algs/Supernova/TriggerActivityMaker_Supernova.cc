@@ -1,6 +1,6 @@
 #include "dune-trigger-algs/Supernova/TriggerActivityMaker_Supernova.hh"
 
-using namespace DuneTriggerAlgs;
+using namespace triggeralgs;
 
 void TriggerActivityMakerSupernova::operator()(const TriggerPrimitive& input_tp,
                                                 std::vector<TriggerActivity>& output_ta) {

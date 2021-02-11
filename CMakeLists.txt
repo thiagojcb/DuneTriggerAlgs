@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.13)
 
-project(DuneTriggerAlgs)
+project(triggeralgs)
 include(CMakePackageConfigHelpers)
-set(DUNETRIGGERALGS_MAJOR_VERSION "0")
-set(DUNETRIGGERALGS_MINOR_VERSION "0")
-set(DUNETRIGGERALGS_PATCH_VERSION "0")
-set(DUNETRIGGERALGS_VERSION ${DUNETRIGGERALGS_MAJOR_VERSION}_${DUNETRIGGERALGS_MINOR_VERSION}_${DUNETRIGGERALGS_PATCH_VERSION})
+set(TRIGGERALGS_MAJOR_VERSION "0")
+set(TRIGGERALGS_MINOR_VERSION "0")
+set(TRIGGERALGS_PATCH_VERSION "0")
+set(TRIGGERALGS_VERSION ${TRIGGERALGS_MAJOR_VERSION}_${TRIGGERALGS_MINOR_VERSION}_${TRIGGERALGS_PATCH_VERSION})
 
 set(LIBRARIES_INSTALL "lib")
 set(INCLUDES_INSTALL "include")
@@ -154,7 +154,7 @@ function (add_dune_trigger_lib)
     target_compile_options(${ALGOLIBNAME} PRIVATE -Wall -Wextra -pedantic -Werror)
 
     install(TARGETS ${ALGOLIBNAME}
-      EXPORT DuneTriggerAlgsTargets
+      EXPORT triggeralgsTargets
       LIBRARY DESTINATION ${LIBRARIES_INSTALL}
       PUBLIC_HEADER DESTINATION ${INCLUDES_INSTALL}/dune-triggers-algs/${ALGOLIBNAME}
       )
@@ -176,8 +176,8 @@ foreach(F ${HEADERS})
   install(FILES ${F} DESTINATION ${INCLUDES_INSTALL}/${INC})
 endforeach()
 
-CONFIGURE_PACKAGE_CONFIG_FILE(DuneTriggerAlgsConfig.cmake.in
-  ${CMAKE_CURRENT_BINARY_DIR}/DuneTriggerAlgsConfig.cmake
+CONFIGURE_PACKAGE_CONFIG_FILE(triggeralgsConfig.cmake.in
+  ${CMAKE_CURRENT_BINARY_DIR}/triggeralgsConfig.cmake
   INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX}
   PATH_VARS INCLUDES_INSTALL LIBRARIES_INSTALL
   )
@@ -185,10 +185,10 @@ CONFIGURE_PACKAGE_CONFIG_FILE(DuneTriggerAlgsConfig.cmake.in
 add_subdirectory(dune-trigger-algs)
 add_subdirectory(autogen)
 
-install(EXPORT DuneTriggerAlgsTargets DESTINATION ${CMAKE_INSTALL_PREFIX})
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/DuneTriggerAlgsConfig.cmake
+install(EXPORT triggeralgsTargets DESTINATION ${CMAKE_INSTALL_PREFIX})
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/triggeralgsConfig.cmake
   DESTINATION ${CMAKE_INSTALL_PREFIX}
   )
 
 
-export(PACKAGE DuneTriggerAlgs)
+export(PACKAGE triggeralgs)

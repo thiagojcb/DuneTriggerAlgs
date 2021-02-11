@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 
-namespace DuneTriggerAlgs {
+namespace triggeralgs {
 
   class TriggerActivityMaker {
   public:
