@@ -1,9 +1,14 @@
 #include "dune-trigger-algs/Supernova/TriggerActivityMaker_Supernova.hh"
+#include <chrono>
 
+using pd_clock = std::chrono::duration<double, std::ratio<1, 50000000>>;
 using namespace triggeralgs;
 
 void TriggerActivityMakerSupernova::operator()(const TriggerPrimitive& input_tp,
                                                 std::vector<TriggerActivity>& output_ta) {
+  // Time measurement
+  auto now = std::chrono::steady_clock::now();
+  m_algorithm = (uint32_t)pd_clock(now.time_since_epoch()).count();
 
   int64_t tend = input_tp.time_start+input_tp.time_over_threshold;
     

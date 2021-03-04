@@ -4,6 +4,7 @@
 #include <limits>
 #include <chrono>
 
+using pd_clock = std::chrono::duration<double, std::ratio<1, 50000000>>;
 using namespace triggeralgs;
 
 void TriggerDecisionMakerSupernova::operator()(const TriggerCandidate& cand,
@@ -12,13 +13,16 @@ void TriggerDecisionMakerSupernova::operator()(const TriggerCandidate& cand,
   std::vector<TriggerCandidate> vCand;
   vCand.push_back(cand);
   
+  auto now = std::chrono::steady_clock::now();
+//  Time measurement
+//  uint32_t algorithm = (uint32_t)pd_clock(now.time_since_epoch()).count();
 
   TriggerDecision trigger {cand.time_start,
                            cand.time_end,
                            cand.time_decided,
                            cand.detid,
                            cand.type,
-                           cand.algorithm,
+                           algorithm,
                            cand.version,
                            vCand}; 
 
