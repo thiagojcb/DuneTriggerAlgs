@@ -14,8 +14,8 @@ void TriggerDecisionMakerSupernova::operator()(const TriggerCandidate& cand,
   vCand.push_back(cand);
   
   auto now = std::chrono::steady_clock::now();
-//  Time measurement
-//  uint32_t algorithm = (uint32_t)pd_clock(now.time_since_epoch()).count();
+//  Timestamp 
+  uint32_t algorithm = (uint32_t)pd_clock(now.time_since_epoch()).count();
 
   TriggerDecision trigger {cand.time_start,
                            cand.time_end,
