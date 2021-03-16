@@ -24,7 +24,7 @@ void TriggerCandidateMakerSupernova::operator()(const TriggerActivity& activity,
     std::vector<uint16_t> detid_vector;
     detid_vector.push_back(detid);
 //    Timestamp
-    uint32_t algorithm = (uint32_t)pd_clock(system_clock.time_since_epoch()).count();
+    uint32_t algorithm = (uint32_t)pd_clock(now.time_since_epoch()).count();
     TriggerCandidate trigger {time - 500'000'000, // time_start (10 seconds before the start of the activity)
                              activity.time_end, // time_end, but that should probably be _at least_ this number
                              int64_t(pd_clock(now.time_since_epoch()).count()), // this is now in dune time, with a cast to avoid narrowing warning
