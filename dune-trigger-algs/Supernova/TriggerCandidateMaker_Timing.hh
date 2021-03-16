@@ -20,7 +20,7 @@ namespace triggeralgs {
     std::vector<TriggerPrimitive> m_primitive;
     std::atomic<int64_t > m_time_window   = {500'000'000};   /// Slinding time window to count activities
     // example values
-    std::vector<std::pair<int64_t, int64_t>> m_map = { {1000,2000}, {10000, 20000}, {5000000, 600000} };
+    std::vector<std::pair<int64_t, int64_t>> m_map = { {1000,2000}, {10000, 20000}, {5000000, 6000000} };
 
     /// this function gets rid of the old activities
     void FlushOldActivity(int64_t time_now) {
