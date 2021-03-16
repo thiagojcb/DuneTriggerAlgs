@@ -21,17 +21,16 @@ void TriggerCandidateMakerSupernova::operator()(const TriggerActivity& activity,
     // set all bits to one (probably this will mean down the line: "record every part of the detector")
     uint32_t detid = 0xFFFFFFFF;
     
-//    Timestamp
-//    auto system_clock = std::chrono::steady_clock::now();
-//    uint32_t algorithm = (uint32_t)pd_clock(system_clock.time_since_epoch()).count();
     std::vector<uint16_t> detid_vector;
     detid_vector.push_back(detid);
+//    Timestamp
+    uint32_t algorithm = (uint32_t)pd_clock(system_clock.time_since_epoch()).count();
     TriggerCandidate trigger {time - 500'000'000, // time_start (10 seconds before the start of the activity)
                              activity.time_end, // time_end, but that should probably be _at least_ this number
                              int64_t(pd_clock(now.time_since_epoch()).count()), // this is now in dune time, with a cast to avoid narrowing warning
                              detid_vector, // all the detector
 	                     0, //type ( flag that says what type of trigger might be (e.g. SN/Muon/Beam) )
-	                     activity.algorithm, //algorithm ( flag that says which algorithm created the trigger (e.g. SN/HE/Solar) )
+	                     algorithm, //algorithm ( flag that says which algorithm created the trigger (e.g. SN/HE/Solar) )
 	                     0, //version of the above
                              m_activity}; // TAs used to form this trigger candidate
     m_activity.clear();
