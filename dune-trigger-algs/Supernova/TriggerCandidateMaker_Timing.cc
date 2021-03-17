@@ -22,8 +22,8 @@ void TriggerCandidateMakerTiming::operator()(const TriggerPrimitive& primitive,
     uint32_t detid = primitive.detid;
     
 //    Timestamp
-//    auto system_clock = std::chrono::steady_clock::now();
-//    uint32_t algorithm = (uint32_t)pd_clock(system_clock.time_since_epoch()).count();
+    auto system_clock = std::chrono::steady_clock::now();
+    uint32_t algorithm = (uint32_t)pd_clock(system_clock.time_since_epoch()).count();
     std::vector<uint16_t> detid_vector;
     std::vector<TriggerPrimitive> primitive_vector;
     detid_vector.push_back(detid);
@@ -37,7 +37,7 @@ void TriggerCandidateMakerTiming::operator()(const TriggerPrimitive& primitive,
                              int64_t(pd_clock(now.time_since_epoch()).count()), // this is now in dune time, with a cast to avoid narrowing warning
                              detid_vector, // all the detector
 	                     0, //type ( flag that says what type of trigger might be (e.g. SN/Muon/Beam) )
-	                     primitive.algorithm, //algorithm ( flag that says which algorithm created the trigger (e.g. SN/HE/Solar) )
+	                     algorithm, //algorithm ( flag that says which algorithm created the trigger (e.g. SN/HE/Solar) )
 	                     0, //version of the above
                              activity_vector}; // TAs used to form this trigger candidate
     m_primitive.clear();
