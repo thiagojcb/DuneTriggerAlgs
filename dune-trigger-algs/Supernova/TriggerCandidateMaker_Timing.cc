@@ -28,7 +28,7 @@ void TriggerCandidateMakerTiming::operator()(const TriggerPrimitive& primitive,
     std::vector<TriggerPrimitive> primitive_vector;
     detid_vector.push_back(detid);
     primitive_vector.push_back(primitive);
-    TriggerActivity activity {0,0,0,0,0,0,0,0,0,0,0,0,0,primitive_vector};
+    TriggerActivity activity {0,0,0,0,0,0,0,0,0,0,0,primitive.algorithm,0,primitive_vector};
     std::vector<TriggerActivity> activity_vector;
     activity_vector.push_back(activity);
 
