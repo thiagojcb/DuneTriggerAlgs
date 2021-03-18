@@ -27,7 +27,7 @@ namespace triggeralgs {
       int64_t how_far = time_now - m_time_window;
       auto end = std::remove_if(m_message.begin(), m_message.end(),
 				[how_far, this] (auto& c) -> bool {
-				  return (c.time_stamp < how_far);
+				  return ((int64_t)c.time_stamp < how_far);
 				});
       m_message.erase(end, m_message.end());
     }

@@ -9,7 +9,7 @@ using pd_clock = std::chrono::duration<double, std::ratio<1, 50'000'000>>;
 
 void TriggerCandidateMakerTiming::operator()(const TimingMessage& message,
                                                std::vector<TriggerCandidate>& cand) {
-  int64_t time = message.time_stamp;
+  int64_t time = (int64_t)message.time_stamp;
   FlushOldActivity(time); // get rid of old activities in the buffer
   
 
@@ -19,7 +19,7 @@ void TriggerCandidateMakerTiming::operator()(const TimingMessage& message,
    std::chrono::time_point<std::chrono::steady_clock> now;
 
     // set all bits to one (probably this will mean down the line: "record every part of the detector")
-    uint32_t detid = message.signal_type;
+    uint32_t detid = 0;
     std::vector<uint16_t> detid_vector;
     detid_vector.push_back(detid);
     
@@ -38,7 +38,7 @@ void TriggerCandidateMakerTiming::operator()(const TimingMessage& message,
                              time + m_map[message.signal_type].second, // time_end, 
                              int64_t(pd_clock(now.time_since_epoch()).count()), // this is now in dune time, with a cast to avoid narrowing warning
                              detid_vector, // all the detector
-	                     0, //type ( flag that says what type of trigger might be (e.g. SN/Muon/Beam) )
+	                     message.signal_type, //type ( flag that says what type of trigger might be (e.g. SN/Muon/Beam) )
 	                     message.counter, //algorithm ( flag that says which algorithm created the trigger (e.g. SN/HE/Solar) )
 	                     0, //version of the above
                              activity_vector}; // TAs used to form this trigger candidate
