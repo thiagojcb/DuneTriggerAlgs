@@ -7,14 +7,14 @@
 using namespace triggeralgs;
 using pd_clock = std::chrono::duration<double, std::ratio<1, 50'000'000>>;
 
-void TriggerCandidateMakerTiming::operator()(const TimingMessage& message,
+void TriggerCandidateMakerTiming::operator()(const TimeStampedData& data,
                                                std::vector<TriggerCandidate>& cand) {
-  int64_t time = (int64_t)message.time_stamp;
+  int64_t time = (int64_t)data.time_stamp;
   FlushOldActivity(time); // get rid of old activities in the buffer
   
 
 
-   m_message.push_back(message);
+   m_data.push_back(data);
 
    std::chrono::time_point<std::chrono::steady_clock> now;
 
@@ -34,15 +34,15 @@ void TriggerCandidateMakerTiming::operator()(const TimingMessage& message,
     std::vector<TriggerActivity> activity_vector;
     activity_vector.push_back(activity);
 
-    TriggerCandidate trigger {time - m_map[message.signal_type].first, // time_start (
-                             time + m_map[message.signal_type].second, // time_end, 
+    TriggerCandidate trigger {time - m_map[data.signal_type].first, // time_start (
+                             time + m_map[data.signal_type].second, // time_end, 
                              int64_t(pd_clock(now.time_since_epoch()).count()), // this is now in dune time, with a cast to avoid narrowing warning
                              detid_vector, // all the detector
-	                     message.signal_type, //type ( flag that says what type of trigger might be (e.g. SN/Muon/Beam) )
-	                     message.counter, //algorithm ( flag that says which algorithm created the trigger (e.g. SN/HE/Solar) )
+	                     data.signal_type, //type ( flag that says what type of trigger might be (e.g. SN/Muon/Beam) )
+	                     data.counter, //algorithm ( flag that says which algorithm created the trigger (e.g. SN/HE/Solar) )
 	                     0, //version of the above
                              activity_vector}; // TAs used to form this trigger candidate
-    m_message.clear();
+    m_data.clear();
     // Give the trigger word back
     cand.push_back(trigger);
     return;
