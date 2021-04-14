@@ -1,14 +1,14 @@
 cmake_minimum_required(VERSION 3.13)
-
 project(triggeralgs)
-include(CMakePackageConfigHelpers)
+
 set(TRIGGERALGS_MAJOR_VERSION "0")
 set(TRIGGERALGS_MINOR_VERSION "1")
 set(TRIGGERALGS_PATCH_VERSION "0")
 set(TRIGGERALGS_VERSION ${TRIGGERALGS_MAJOR_VERSION}_${TRIGGERALGS_MINOR_VERSION}_${TRIGGERALGS_PATCH_VERSION})
 
-set(LIBRARIES_INSTALL "lib")
-set(INCLUDES_INSTALL "include")
+include(CMakePackageConfigHelpers)
+include(GNUInstallDirs)
+set(CMAKE_INSTALL_CMAKEDIR   ${CMAKE_INSTALL_LIBDIR}/${PROJECT_NAME}/cmake )
 
 function(get_last_dir FILEPATH)
   # This function get the latest directory name before the file
@@ -147,16 +147,16 @@ function (add_dune_trigger_lib)
     get_last_dir(${CMAKE_CURRENT_SOURCE_DIR})
     
     target_include_directories(${ALGOLIBNAME} PUBLIC
-      $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
-      $<INSTALL_INTERFACE:${INCLUDES_INSTALL}/>
+      $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+      $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/>
       )
 
     target_compile_options(${ALGOLIBNAME} PRIVATE -Wall -Wextra -pedantic -Werror)
 
     install(TARGETS ${ALGOLIBNAME}
       EXPORT triggeralgsTargets
-      LIBRARY DESTINATION ${LIBRARIES_INSTALL}
-      PUBLIC_HEADER DESTINATION ${INCLUDES_INSTALL}/dune-triggers-algs/${ALGOLIBNAME}
+      LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+      PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${ALGOLIBNAME}
       )
 
   else()
@@ -164,30 +164,38 @@ function (add_dune_trigger_lib)
     add_library(${ALGOLIBNAME} INTERFACE)
     message(STATUS "Created INTERFACE (empty) lib: " ${ALGOLIBNAME})
 
-    install(FILES ${HH_FILES} DESTINATION ${INCLUDES_INSTALL}/dune-triggers-algs/${ALGOLIBNAME})
+    install(FILES ${HH_FILES} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/triggeralgs/${ALGOLIBNAME})
   endif()
 endfunction()
 
-glob_recursive_relat_carefully(${CMAKE_CURRENT_SOURCE_DIR}/dune-trigger-algs "*.h*" HEADERS)
 
+
+# We want a triggeralgs::triggeralgs target for dependees. Make that here
+add_library(triggeralgs INTERFACE)
+target_include_directories(triggeralgs INTERFACE
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+  )
+install(TARGETS triggeralgs EXPORT triggeralgsTargets)
+
+glob_recursive_relat_carefully(${CMAKE_CURRENT_SOURCE_DIR}/triggeralgs "*.h*" HEADERS)
 foreach(F ${HEADERS})
   message(STATUS ${F})
   get_filename_component(INC ${F} DIRECTORY)
-  install(FILES ${F} DESTINATION ${INCLUDES_INSTALL}/${INC})
+  install(FILES ${F} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${INC})
 endforeach()
 
 CONFIGURE_PACKAGE_CONFIG_FILE(triggeralgsConfig.cmake.in
   ${CMAKE_CURRENT_BINARY_DIR}/triggeralgsConfig.cmake
-  INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX}
-  PATH_VARS INCLUDES_INSTALL LIBRARIES_INSTALL
+  INSTALL_DESTINATION ${CMAKE_INSTALL_CMAKEDIR}
   )
 
-add_subdirectory(dune-trigger-algs)
+add_subdirectory(include)
 add_subdirectory(autogen)
 
-install(EXPORT triggeralgsTargets DESTINATION ${CMAKE_INSTALL_PREFIX})
+install(EXPORT triggeralgsTargets DESTINATION ${CMAKE_INSTALL_CMAKEDIR} NAMESPACE triggeralgs::)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/triggeralgsConfig.cmake
-  DESTINATION ${CMAKE_INSTALL_PREFIX}
+  DESTINATION ${CMAKE_INSTALL_CMAKEDIR}
   )
 
 

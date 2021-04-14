@@ -1,4 +1,4 @@
-#include "dune-trigger-algs/Supernova/TriggerCandidateMaker_Timing.hh"
+#include "triggeralgs/Supernova/TriggerCandidateMaker_Timing.hpp"
 
 #include <algorithm>
 #include <limits>

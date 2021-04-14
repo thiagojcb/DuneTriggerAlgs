@@ -1,5 +1,5 @@
 #pragma once
-#include "dune-trigger-algs/TriggerActivityMaker.hh"
+#include "triggeralgs/TriggerActivityMaker.hpp"
 
 #include <algorithm>
 #include <limits>

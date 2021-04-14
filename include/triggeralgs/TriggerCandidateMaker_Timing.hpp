@@ -1,8 +1,8 @@
 #pragma once
-#include "dune-trigger-algs/TimeStampedData.hh"
-#include "dune-trigger-algs/TriggerPrimitive.hh"
-#include "dune-trigger-algs/TriggerActivity.hh"
-#include "dune-trigger-algs/TriggerCandidate.hh"
+#include "triggeralgs/TimeStampedData.hpp"
+#include "triggeralgs/TriggerPrimitive.hpp"
+#include "triggeralgs/TriggerActivity.hpp"
+#include "triggeralgs/TriggerCandidate.hpp"
 #include <vector>
 #include <string>
 

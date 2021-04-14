@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 #include <vector>
-#include "dune-trigger-algs/TriggerActivity.hh"
+#include "triggeralgs/TriggerActivity.hpp"
 
 namespace triggeralgs {
   struct TriggerCandidate {
