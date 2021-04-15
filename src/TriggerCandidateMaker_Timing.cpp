@@ -1,4 +1,4 @@
-#include "triggeralgs/Supernova/TriggerCandidateMaker_Timing.hpp"
+#include "triggeralgs/TriggerCandidateMaker_Timing.hpp"
 
 #include <algorithm>
 #include <limits>

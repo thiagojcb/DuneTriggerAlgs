@@ -148,6 +148,7 @@ function (add_dune_trigger_lib)
     
     target_include_directories(${ALGOLIBNAME} PUBLIC
       $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+      $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/triggeralgs>
       $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/>
       )
 
@@ -168,8 +169,6 @@ function (add_dune_trigger_lib)
   endif()
 endfunction()
 
-
-
 # We want a triggeralgs::triggeralgs target for dependees. Make that here
 add_library(triggeralgs INTERFACE)
 target_include_directories(triggeralgs INTERFACE
@@ -185,18 +184,15 @@ foreach(F ${HEADERS})
   install(FILES ${F} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${INC})
 endforeach()
 
-CONFIGURE_PACKAGE_CONFIG_FILE(triggeralgsConfig.cmake.in
+CONFIGURE_PACKAGE_CONFIG_FILE(cmake/triggeralgsConfig.cmake.in
   ${CMAKE_CURRENT_BINARY_DIR}/triggeralgsConfig.cmake
   INSTALL_DESTINATION ${CMAKE_INSTALL_CMAKEDIR}
   )
 
-add_subdirectory(include)
 add_subdirectory(autogen)
+add_subdirectory(src)
 
 install(EXPORT triggeralgsTargets DESTINATION ${CMAKE_INSTALL_CMAKEDIR} NAMESPACE triggeralgs::)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/triggeralgsConfig.cmake
   DESTINATION ${CMAKE_INSTALL_CMAKEDIR}
   )
-
-
-export(PACKAGE triggeralgs)
