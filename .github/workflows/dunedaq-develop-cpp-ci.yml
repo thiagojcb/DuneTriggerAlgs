@@ -4,11 +4,12 @@ name: build-develop
 # or API.
 on:
   push:
-    branches: [ master ]
+    branches: [ develop ]
     paths-ignore:
       - 'docs/**'
   pull_request:
-    branches: [ master ]
+    branches: [ develop ]
+    types: [assigned, opened, synchronize, reopened, ready_for_review ]
   schedule:
     - cron: "0 7 * * *"
 
