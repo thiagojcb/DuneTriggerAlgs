@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 #include <vector>
-#include "dune-trigger-algs/TriggerCandidate.hh"
+#include "triggeralgs/TriggerCandidate.hpp"
 
 namespace triggeralgs {
   struct TriggerDecision {

@@ -1,6 +1,6 @@
 #pragma once
-#include "dune-trigger-algs/TriggerPrimitive.hh"
-#include "dune-trigger-algs/TriggerActivity.hh"
+#include "triggeralgs/TriggerPrimitive.hpp"
+#include "triggeralgs/TriggerActivity.hpp"
 #include <vector>
 #include <string>
 

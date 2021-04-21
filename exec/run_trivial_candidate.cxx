@@ -5,7 +5,7 @@
 
 #include <boost/circular_buffer.hpp>
 
-#include "dune-triggers/Trivial/TriggerCandidateMaker_Trivial.hh"
+#include "dune-triggers/Trivial/TriggerCandidateMaker_Trivial.hpp"
 #include "NaiveTriggerQueue.h"
 #include "NaiveTriggerCandidateConsumer.h"
 

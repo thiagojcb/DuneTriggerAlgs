@@ -1,194 +1,48 @@
 cmake_minimum_required(VERSION 3.13)
+project(triggeralgs VERSION 0.2.0)
 
-project(triggeralgs)
 include(CMakePackageConfigHelpers)
-set(TRIGGERALGS_MAJOR_VERSION "0")
-set(TRIGGERALGS_MINOR_VERSION "1")
-set(TRIGGERALGS_PATCH_VERSION "0")
-set(TRIGGERALGS_VERSION ${TRIGGERALGS_MAJOR_VERSION}_${TRIGGERALGS_MINOR_VERSION}_${TRIGGERALGS_PATCH_VERSION})
+include(GNUInstallDirs)
+set(CMAKE_INSTALL_CMAKEDIR   ${CMAKE_INSTALL_LIBDIR}/${PROJECT_NAME}/cmake )
 
-set(LIBRARIES_INSTALL "lib")
-set(INCLUDES_INSTALL "include")
+# We follow the daq-cmake convention of building one main library for
+# the package. In our case, we include all of the available trigger
+# implementations in the library (rather than, say, splitting them out
+# into individual libraries).
+#
+# As in daq-cmake, headers that form part of the package's interface
+# (ie, which are to be used by other packages) live in
+# include/triggeralgs, while headers which are private to triggeralgs
+# live in src/triggeralgs.
 
-function(get_last_dir FILEPATH)
-  # This function get the latest directory name before the file
-  # get_filename_component(DIRNAME ${FILEPATH} DIRECTORY)
-  string(FIND ${FILEPATH} "/" P REVERSE)
-  string(LENGTH ${FILEPATH} L)
-  # The beauty of cmake exposed right here
-  math(EXPR L "${L}-${P}")
-  math(EXPR P "${P}+1")
-  
-  string(SUBSTRING ${FILEPATH} ${P} ${L} LASTDIR)
-  set(LASTDIR ${LASTDIR} PARENT_SCOPE)
-endfunction()
+# We don't depend on any plugin library, so we don't have any
+# plugins. If plugins are needed, they will be provided by the code
+# which uses triggeralgs (eg, for dunedaq plugins, the plugin will be
+# provided by the trigger package)
+add_library(triggeralgs SHARED
+  src/TriggerCandidateMaker_Timing.cpp
+  src/TriggerActivityMaker_Supernova.cpp
+  src/TriggerCandidateMaker_Supernova.cpp
+  src/TriggerDecisionMaker_Supernova.cpp)
+target_include_directories(triggeralgs PUBLIC
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+  )
+install(TARGETS triggeralgs EXPORT triggeralgsTargets)
 
-
-function(get_libname FILEPATH)
-  get_last_dir(${FILEPATH})
-  
-  # now grabs the library name
-  set(ALGOLIBNAME "${LASTDIR}Trigger" PARENT_SCOPE)
-endfunction()
-
-function (glob_carefully FILEPATH REGEX RET)
-  file(GLOB FILES "${FILEPATH}/${REGEX}")
-  
-  foreach (F ${FILES})
-    string(REGEX MATCH ".*~" CHECK ${F})
-
-    if (NOT CHECK STREQUAL "")
-      list(REMOVE_ITEM FILES ${F})
-    endif()
-  endforeach()
-  
-  set(${RET} ${FILES} PARENT_SCOPE)
-endfunction()
-
-function (glob_recursive_relat_carefully FILEPATH REGEX RET)
-  file(GLOB_RECURSE FILES
-    RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
-    "${FILEPATH}/${REGEX}")
-  
-  foreach (F ${FILES})
-    string(REGEX MATCH ".*~" CHECK ${F})
-
-    if (NOT CHECK STREQUAL "")
-      list(REMOVE_ITEM FILES ${F})
-    endif()
-  endforeach()
-  
-  set(${RET} ${FILES} PARENT_SCOPE)
-endfunction()
-
-
-function (set_alg_type_name_lib FILEPATH)
-  set(ALGONAME "" PARENT_SCOPE)
-  set(ALGOTYPE "" PARENT_SCOPE)
-  set(ALGOLIBNAME "" PARENT_SCOPE)
-  
-  #grabs the header only
-  string(REGEX MATCH ".*h.*" CHECK ${FILEPATH})
-  if (${CHECK} STREQUAL "")
-    return()
-  endif()
-  
-  #rids of the temp files
-  string(REGEX MATCH ".*\\~" CHECK ${FILEPATH})
-  if (NOT ${CHECK} STREQUAL "")
-    message(STATUS "Ignoring " ${FILEPATH} " temporary file")
-    return()
-  endif()
-
-  file(READ ${FILEPATH} WHOLEFILE)
-  string(REGEX MATCHALL "class.*:[ \t\r\n]*public[ \t\r\n]*Trigger.*Maker[ \t\r\n]*[,a-zA-Z0-1 ]*[ \t\r\n]*{"
-    CLASSDEF "${WHOLEFILE}"
-    )
-  
-  if ("${CLASSDEF}" STREQUAL "")
-    message(STATUS "Couldn't work out which trigger maker type from file " ${FILEPATH}
-      " This is because the cmake script looks for the pattern \"class *: public Trigger*Maker *{\" and couldn't encounter it in this file, maybe this is fine and it's just another included file which doesn't actually have Trigger*Maker class inside it?")
-    return()
-  endif ()
-
-  string(REGEX MATCH "public[ \t\r\n]*Trigger.*Maker"
-    ALGOTYPE "${CLASSDEF}"
-    )
-  
-  string(REGEX MATCH "Trigger.*Maker"
-    ALGOTYPE "${ALGOTYPE}"
-    )
-
-  string(LENGTH ${ALGOTYPE} L)
-
-  # "trigger" has 7 letters and "maker" has 5 letters, such ugly syntax
-  math(EXPR L "${L}-7-5")
-
-  string(SUBSTRING ${ALGOTYPE} 7 ${L} ALGOTYPE)
-  # NOW WE HAVE THE TYPE (Candidate, Primitive, Decision) OF THE ALGORITHM
-  
-  string(REGEX MATCH "class.*:" ALGONAME ${CLASSDEF})
-
-  string(REGEX REPLACE "[ \n\t\r]" "" ALGONAME ${ALGONAME} )
-  string(LENGTH ${ALGONAME} L)
-  math(EXPR L "${L}-1-5") # "class" has 5 letters + 1 letter for the semicolon
-  string(SUBSTRING ${ALGONAME} 5 ${L} ALGONAME)
-
-  # GREAT! NOW WE HAVE THE NAME OF THE ALGORITHM
-  get_filename_component(DIRNAME ${FILEPATH} DIRECTORY)
-  get_libname(${DIRNAME})
-
-  set(ALGONAME ${ALGONAME} PARENT_SCOPE)
-  set(ALGOTYPE ${ALGOTYPE} PARENT_SCOPE)
-  set(ALGOLIBNAME ${ALGOLIBNAME} PARENT_SCOPE)
-endfunction()
-
-
-function (add_dune_trigger_lib)
-  get_libname(${CMAKE_CURRENT_SOURCE_DIR})
-    
-  # grabs the .cc, .cxx, .c, .cpp files
-  glob_carefully("." "*.h*" HH_FILES)
-  glob_carefully("." "*.c*" CC_FILES)
-
-  if (CC_FILES)
-    # This is the standard case, header+cc files -> we create a library
-    add_library(${ALGOLIBNAME} SHARED ${HH_FILES} ${CC_FILES})
-
-    set_target_properties(${ALGOLIBNAME}
-      PROPERTIES
-      LINKER_LANGUAGE CXX
-      )
-    
-    message(STATUS "Created lib: " ${ALGOLIBNAME})
-
-    list(APPEND ALL_LIBS $ENV{ALL_LIBS} ${ALGOLIBNAME})
-
-    get_last_dir(${CMAKE_CURRENT_SOURCE_DIR})
-    
-    target_include_directories(${ALGOLIBNAME} PUBLIC
-      $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
-      $<INSTALL_INTERFACE:${INCLUDES_INSTALL}/>
-      )
-
-    target_compile_options(${ALGOLIBNAME} PRIVATE -Wall -Wextra -pedantic -Werror)
-
-    install(TARGETS ${ALGOLIBNAME}
-      EXPORT triggeralgsTargets
-      LIBRARY DESTINATION ${LIBRARIES_INSTALL}
-      PUBLIC_HEADER DESTINATION ${INCLUDES_INSTALL}/dune-triggers-algs/${ALGOLIBNAME}
-      )
-
-  else()
-    # This is the standard case, header only files -> we create an "interface library"
-    add_library(${ALGOLIBNAME} INTERFACE)
-    message(STATUS "Created INTERFACE (empty) lib: " ${ALGOLIBNAME})
-
-    install(FILES ${HH_FILES} DESTINATION ${INCLUDES_INSTALL}/dune-triggers-algs/${ALGOLIBNAME})
-  endif()
-endfunction()
-
-glob_recursive_relat_carefully(${CMAKE_CURRENT_SOURCE_DIR}/dune-trigger-algs "*.h*" HEADERS)
-
-foreach(F ${HEADERS})
-  message(STATUS ${F})
-  get_filename_component(INC ${F} DIRECTORY)
-  install(FILES ${F} DESTINATION ${INCLUDES_INSTALL}/${INC})
-endforeach()
-
-CONFIGURE_PACKAGE_CONFIG_FILE(triggeralgsConfig.cmake.in
+CONFIGURE_PACKAGE_CONFIG_FILE(cmake/triggeralgsConfig.cmake.in
   ${CMAKE_CURRENT_BINARY_DIR}/triggeralgsConfig.cmake
-  INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX}
-  PATH_VARS INCLUDES_INSTALL LIBRARIES_INSTALL
+  INSTALL_DESTINATION ${CMAKE_INSTALL_CMAKEDIR}
   )
 
-add_subdirectory(dune-trigger-algs)
+# TODO PAR 2021-04-15: What is in autogen? Is it actually used?
 add_subdirectory(autogen)
 
-install(EXPORT triggeralgsTargets DESTINATION ${CMAKE_INSTALL_PREFIX})
+install(EXPORT triggeralgsTargets DESTINATION ${CMAKE_INSTALL_CMAKEDIR} NAMESPACE triggeralgs::)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/triggeralgsConfig.cmake
-  DESTINATION ${CMAKE_INSTALL_PREFIX}
-  )
-
-
-export(PACKAGE triggeralgs)
+        DESTINATION ${CMAKE_INSTALL_CMAKEDIR})
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/triggeralgsConfig.cmake
+        DESTINATION ${CMAKE_INSTALL_CMAKEDIR})
+install(DIRECTORY include/${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} FILES_MATCHING PATTERN "*.h??")
+#install(DIRECTORY ${CMAKE_CODEGEN_BINARY_DIR}/include/${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} FILES_MATCHING PATTERN "*.h??")

@@ -4,7 +4,7 @@
 
 #include <atomic>
 
-#include "TriggerCandidateMaker.hh"
+#include "TriggerCandidateMaker.hpp"
 /// A simple class that just dumps every candidate it receives in a txt file, and wait random times in between
 
 class NaiveTriggerCandidateConsumer {
