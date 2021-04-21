@@ -24,7 +24,7 @@ void TriggerDecisionMakerSupernova::operator()(const TriggerCandidate& cand,
                            0,
                            0,
                            //cand.detid,
-                           cand.type,
+                           0,
                            algorithm,
                            cand.version,
                            vCand}; 
