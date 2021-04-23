@@ -38,7 +38,7 @@ void TriggerCandidateMakerTiming::operator()(const TimeStampedData& data,
                              time + m_map[data.signal_type].second, // time_end, 
                              int64_t(pd_clock(now.time_since_epoch()).count()), // this is now in dune time, with a cast to avoid narrowing warning
                              detid_vector, // all the detector
-	                     data.signal_type, //type ( flag that says what type of trigger might be (e.g. SN/Muon/Beam) )
+	                     TriggerCandidateType::kTiming, //type ( flag that says what type of trigger might be (e.g. SN/Muon/Beam) )
 	                     data.counter, //algorithm ( flag that says which algorithm created the trigger (e.g. SN/HE/Solar) )
 	                     0, //version of the above
                              activity_vector}; // TAs used to form this trigger candidate

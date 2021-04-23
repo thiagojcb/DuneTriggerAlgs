@@ -2,6 +2,7 @@
 #include <cstdint>
 #include <vector>
 #include "triggeralgs/TriggerActivity.hpp"
+#include "triggeralgs/TriggerCandidateType.hpp"
 
 namespace triggeralgs {
   struct TriggerCandidate {
@@ -9,7 +10,7 @@ namespace triggeralgs {
     int64_t  time_end       = {0};
     int64_t  time_candidate = {0};
     std::vector<uint16_t> detid          = {0};
-    uint32_t type           = {0};
+    TriggerCandidateType type           = TriggerCandidateType::kUnknown;
     uint32_t algorithm      = {0};
     uint16_t version        = {0};
 
