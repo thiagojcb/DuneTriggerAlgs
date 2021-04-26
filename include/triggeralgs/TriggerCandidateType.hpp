@@ -6,5 +6,6 @@ namespace triggeralgs {
    kTiming = 1,
    kTPCLowE = 2,
    kSupernova = 3,
+   kRandom = 4,
   };
 } // namespace triggeralgs
