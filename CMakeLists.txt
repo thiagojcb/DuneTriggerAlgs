@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.13)
 project(triggeralgs VERSION 0.2.0)
 
+find_package(daq-cmake REQUIRED)
+
+daq_setup_environment()
+
 include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
 set(CMAKE_INSTALL_CMAKEDIR   ${CMAKE_INSTALL_LIBDIR}/${PROJECT_NAME}/cmake )
@@ -20,7 +24,6 @@ set(CMAKE_INSTALL_CMAKEDIR   ${CMAKE_INSTALL_LIBDIR}/${PROJECT_NAME}/cmake )
 # which uses triggeralgs (eg, for dunedaq plugins, the plugin will be
 # provided by the trigger package)
 add_library(triggeralgs SHARED
-  src/TriggerCandidateMaker_Timing.cpp
   src/TriggerActivityMaker_Supernova.cpp
   src/TriggerCandidateMaker_Supernova.cpp
   src/TriggerDecisionMaker_Supernova.cpp)
