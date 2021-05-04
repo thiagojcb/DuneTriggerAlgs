@@ -1,4 +1,4 @@
-#include "dune-trigger-algs/Supernova/TriggerActivityMaker_Supernova.hh"
+#include "triggeralgs/Supernova/TriggerActivityMaker_Supernova.hpp"
 #include <chrono>
 
 using pd_clock = std::chrono::duration<double, std::ratio<1, 50000000>>;

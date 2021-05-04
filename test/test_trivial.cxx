@@ -6,7 +6,7 @@
 #include <random>
 #include <thread>
 
-#include "TriggerPrimitive.hh"
+#include "TriggerPrimitive.hpp"
 
 using namespace DuneTriggers;
 

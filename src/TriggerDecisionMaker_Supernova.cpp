@@ -1,4 +1,4 @@
-#include "dune-trigger-algs/Supernova/TriggerDecisionMaker_Supernova.hh"
+#include "triggeralgs/Supernova/TriggerDecisionMaker_Supernova.hpp"
 
 #include <algorithm>
 #include <limits>
@@ -24,7 +24,7 @@ void TriggerDecisionMakerSupernova::operator()(const TriggerCandidate& cand,
                            0,
                            0,
                            //cand.detid,
-                           cand.type,
+                           0,
                            algorithm,
                            cand.version,
                            vCand}; 

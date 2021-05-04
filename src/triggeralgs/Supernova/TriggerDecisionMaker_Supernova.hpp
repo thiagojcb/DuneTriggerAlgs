@@ -1,5 +1,5 @@
 #pragma once
-#include "dune-trigger-algs/TriggerDecisionMaker.hh"
+#include "triggeralgs/TriggerDecisionMaker.hpp"
 
 #include <algorithm>
 #include <limits>

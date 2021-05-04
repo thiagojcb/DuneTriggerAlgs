@@ -1,5 +1,5 @@
 #pragma once
-#include "dune-trigger-algs/TriggerPrimitive.hh"
+#include "triggeralgs/TriggerPrimitive.hpp"
 #include <vector>
 #include <string>
 

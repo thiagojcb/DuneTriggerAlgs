@@ -1,6 +1,6 @@
-#include "dune-triggers/Trivial/TriggerCandidateMaker_Trivial.hh"
-#include "dune-triggers/Trivial/TriggerDecisionMaker_Trivial.hh"
-#include "dune-triggers/Supernova/TriggerCandidateMaker_Supernova.hh"
+#include "dune-triggers/Trivial/TriggerCandidateMaker_Trivial.hpp"
+#include "dune-triggers/Trivial/TriggerDecisionMaker_Trivial.hpp"
+#include "dune-triggers/Supernova/TriggerCandidateMaker_Supernova.hpp"
 #include <string>
 
 int main()

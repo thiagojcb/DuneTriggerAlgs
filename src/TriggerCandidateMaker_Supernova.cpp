@@ -1,4 +1,4 @@
-#include "dune-trigger-algs/Supernova/TriggerCandidateMaker_Supernova.hh"
+#include "triggeralgs/Supernova/TriggerCandidateMaker_Supernova.hpp"
 
 #include <algorithm>
 #include <limits>
@@ -29,7 +29,7 @@ void TriggerCandidateMakerSupernova::operator()(const TriggerActivity& activity,
                              activity.time_end, // time_end, but that should probably be _at least_ this number
                              int64_t(pd_clock(now.time_since_epoch()).count()), // this is now in dune time, with a cast to avoid narrowing warning
                              detid_vector, // all the detector
-	                     0, //type ( flag that says what type of trigger might be (e.g. SN/Muon/Beam) )
+	                     TriggerCandidateType::kSupernova, //type ( flag that says what type of trigger might be (e.g. SN/Muon/Beam) )
 	                     algorithm, //algorithm ( flag that says which algorithm created the trigger (e.g. SN/HE/Solar) )
 	                     0, //version of the above
                              m_activity}; // TAs used to form this trigger candidate

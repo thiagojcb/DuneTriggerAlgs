@@ -1,7 +1,7 @@
 #pragma once
 #include <boost/lockfree/queue.hpp>
 
-#include "dune-triggers/Trivial/TriggerCandidateMaker_Trivial.hh"
+#include "dune-triggers/Trivial/TriggerCandidateMaker_Trivial.hpp"
 
 class NaiveTriggerQueue {
 protected:
