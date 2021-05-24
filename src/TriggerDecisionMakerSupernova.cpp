@@ -1,12 +1,12 @@
 /**
- * @file TriggerDecisionMaker_Supernova.cpp
+ * @file TriggerDecisionMakerSupernova.cpp
  *
  * This is part of the DUNE DAQ Application Framework, copyright 2020.
  * Licensing/copyright details are in the COPYING file that you should have
  * received with this code.
  */
 
-#include "triggeralgs/Supernova/TriggerDecisionMaker_Supernova.hpp"
+#include "triggeralgs/Supernova/TriggerDecisionMakerSupernova.hpp"
 
 #include <algorithm>
 #include <chrono>

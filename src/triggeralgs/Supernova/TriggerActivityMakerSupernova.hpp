@@ -1,13 +1,13 @@
 /**
- * @file TriggerActivityMaker_Supernova.hpp
+ * @file TriggerActivityMakerSupernova.hpp
  *
  * This is part of the DUNE DAQ Application Framework, copyright 2020.
  * Licensing/copyright details are in the COPYING file that you should have
  * received with this code.
  */
 
-#ifndef TRIGGERALGS_SRC_TRIGGERALGS_SUPERNOVA_TRIGGERACTIVITYMAKER_SUPERNOVA_HPP_
-#define TRIGGERALGS_SRC_TRIGGERALGS_SUPERNOVA_TRIGGERACTIVITYMAKER_SUPERNOVA_HPP_
+#ifndef TRIGGERALGS_SRC_TRIGGERALGS_SUPERNOVA_TRIGGERACTIVITYMAKERSUPERNOVA_HPP_
+#define TRIGGERALGS_SRC_TRIGGERALGS_SUPERNOVA_TRIGGERACTIVITYMAKERSUPERNOVA_HPP_
 
 #include "triggeralgs/TriggerActivityMaker.hpp"
 
@@ -84,4 +84,4 @@ private:
 };
 } // namespace triggeralgs
 
-#endif // TRIGGERALGS_SRC_TRIGGERALGS_SUPERNOVA_TRIGGERACTIVITYMAKER_SUPERNOVA_HPP_
+#endif // TRIGGERALGS_SRC_TRIGGERALGS_SUPERNOVA_TRIGGERACTIVITYMAKERSUPERNOVA_HPP_

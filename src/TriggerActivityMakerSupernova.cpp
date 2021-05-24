@@ -1,12 +1,12 @@
 /**
- * @file TriggerActivityMaker_Supernova.cpp
+ * @file TriggerActivityMakerSupernova.cpp
  *
  * This is part of the DUNE DAQ Application Framework, copyright 2020.
  * Licensing/copyright details are in the COPYING file that you should have
  * received with this code.
  */
 
-#include "triggeralgs/Supernova/TriggerActivityMaker_Supernova.hpp"
+#include "triggeralgs/Supernova/TriggerActivityMakerSupernova.hpp"
 
 #include <chrono>
 #include <vector>

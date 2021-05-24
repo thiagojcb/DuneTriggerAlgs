@@ -1,13 +1,13 @@
 /**
- * @file TriggerDecisionMaker_Supernova.hpp
+ * @file TriggerDecisionMakerSupernova.hpp
  *
  * This is part of the DUNE DAQ Application Framework, copyright 2020.
  * Licensing/copyright details are in the COPYING file that you should have
  * received with this code.
  */
 
-#ifndef TRIGGERALGS_SRC_TRIGGERALGS_SUPERNOVA_TRIGGERDECISIONMAKER_SUPERNOVA_HPP_
-#define TRIGGERALGS_SRC_TRIGGERALGS_SUPERNOVA_TRIGGERDECISIONMAKER_SUPERNOVA_HPP_
+#ifndef TRIGGERALGS_SRC_TRIGGERALGS_SUPERNOVA_TRIGGERDECISIONMAKERSUPERNOVA_HPP_
+#define TRIGGERALGS_SRC_TRIGGERALGS_SUPERNOVA_TRIGGERDECISIONMAKERSUPERNOVA_HPP_
 
 #include "triggeralgs/TriggerDecisionMaker.hpp"
 
@@ -46,4 +46,4 @@ protected:
 
 } // namespace triggeralgs
 
-#endif // TRIGGERALGS_SRC_TRIGGERALGS_SUPERNOVA_TRIGGERDECISIONMAKER_SUPERNOVA_HPP_
+#endif // TRIGGERALGS_SRC_TRIGGERALGS_SUPERNOVA_TRIGGERDECISIONMAKERSUPERNOVA_HPP_

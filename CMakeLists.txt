@@ -20,9 +20,9 @@ set(CMAKE_INSTALL_CMAKEDIR   ${CMAKE_INSTALL_LIBDIR}/${PROJECT_NAME}/cmake )
 # which uses triggeralgs (eg, for dunedaq plugins, the plugin will be
 # provided by the trigger package)
 add_library(triggeralgs SHARED
-  src/TriggerActivityMaker_Supernova.cpp
-  src/TriggerCandidateMaker_Supernova.cpp
-  src/TriggerDecisionMaker_Supernova.cpp)
+  src/TriggerActivityMakerSupernova.cpp
+  src/TriggerCandidateMakerSupernova.cpp
+  src/TriggerDecisionMakerSupernova.cpp)
 target_include_directories(triggeralgs PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
