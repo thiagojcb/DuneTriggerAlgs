@@ -11,8 +11,8 @@
 
 #include "triggeralgs/TriggerActivity.hpp"
 #include "triggeralgs/TriggerCandidate.hpp"
+#include "triggeralgs/Types.hpp"
 
-#include <string>
 #include <vector>
 
 namespace triggeralgs {
@@ -21,7 +21,7 @@ class TriggerCandidateMaker
 {
 public:
   virtual void operator()(const TriggerActivity& input_ta, std::vector<TriggerCandidate>& output_tc) = 0;
-  virtual void flush(std::vector<TriggerCandidate>&) {}
+  virtual void flush(timestamp_t /* until */, std::vector<TriggerCandidate>& /* output_tc */) {}
 };
 
 } // namespace triggeralgs
