@@ -17,9 +17,9 @@
 namespace triggeralgs {
 struct TriggerDecision
 {
-  int64_t time_start = { 0 };
-  int64_t time_end = { 0 };
-  int64_t time_trigger = { 0 };
+  timestamp_t time_start = { 0 };
+  timestamp_t time_end = { 0 };
+  timestamp_t time_trigger = { 0 };
   uint32_t trigger_number = { 0 }; // NOLINT(build/unsigned)
   uint32_t run_number = { 0 };     // NOLINT(build/unsigned)
   uint32_t subrun_number = { 0 };  // NOLINT(build/unsigned)

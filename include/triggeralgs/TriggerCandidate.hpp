@@ -11,6 +11,7 @@
 
 #include "triggeralgs/TriggerActivity.hpp"
 #include "triggeralgs/TriggerCandidateType.hpp"
+#include "triggeralgs/Types.hpp"
 
 #include <cstdint>
 #include <vector>
@@ -18,12 +19,12 @@
 namespace triggeralgs {
 struct TriggerCandidate
 {
-  int64_t time_start = { 0 };
-  int64_t time_end = { 0 };
-  int64_t time_candidate = { 0 };
-  std::vector<uint16_t> detid = { 0 }; // NOLINT(build/unsigned)
+  timestamp_t time_start = { 0 };
+  timestamp_t time_end = { 0 };
+  timestamp_t time_candidate = { 0 };
+  std::vector<detid_t> detid; // NOLINT(build/unsigned)
   TriggerCandidateType type = TriggerCandidateType::kUnknown;
-  uint32_t algorithm = { 0 }; // NOLINT(build/unsigned)
+  candidate_alg_t algorithm = candidate_alg_t::kUnknown; // NOLINT(build/unsigned)
   uint16_t version = { 0 };   // NOLINT(build/unsigned)
 
   std::vector<TriggerActivity> ta_list;

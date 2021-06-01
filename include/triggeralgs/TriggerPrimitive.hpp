@@ -9,22 +9,31 @@
 #ifndef TRIGGERALGS_INCLUDE_TRIGGERALGS_TRIGGERPRIMITIVE_HPP_
 #define TRIGGERALGS_INCLUDE_TRIGGERALGS_TRIGGERPRIMITIVE_HPP_
 
+#include "triggeralgs/Types.hpp"
+
 #include <cstdint>
 
 namespace triggeralgs {
+
+enum class TriggerPrimitiveType {
+  kUnknown = 0,
+  kTPCTriggerPrimitive = 1,
+  kPDSTriggerPrimitive = 2,
+};
+
 struct TriggerPrimitive
 {
-  int64_t time_start = { 0 };
-  int64_t time_peak = { 0 };
-  int32_t time_over_threshold = { 0 };
-  uint16_t channel = { 0 };      // NOLINT(build/unsigned)
+  timestamp_t time_start = { 0 };
+  timestamp_t time_peak = { 0 };
+  timestamp_t time_over_threshold = { 0 };
+  channel_t channel = { 0 };      // NOLINT(build/unsigned)
   uint32_t adc_integral = { 0 }; // NOLINT(build/unsigned)
   uint16_t adc_peak = { 0 };     // NOLINT(build/unsigned)
-  uint16_t detid = { 0 };        // NOLINT(build/unsigned)
-  uint16_t type = { 0 };         // NOLINT(build/unsigned)
-  uint16_t algorithm = { 0 };    // NOLINT(build/unsigned)
+  detid_t detid = { 0 };        // NOLINT(build/unsigned)
+  TriggerPrimitiveType type = TriggerPrimitiveType::kUnknown;         // NOLINT(build/unsigned)
+  primitive_alg_t algorithm = primitive_alg_t::kUnknown;    // NOLINT(build/unsigned)
   uint16_t version = { 0 };      // NOLINT(build/unsigned)
-  uint32_t flag = { 0 };         // NOLINT(build/unsigned)
+  primitive_flags_t flag = { 0 };         // NOLINT(build/unsigned)
 };
 } // namespace triggeralgs
 
