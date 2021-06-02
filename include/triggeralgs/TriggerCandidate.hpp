@@ -10,7 +10,6 @@
 #define TRIGGERALGS_INCLUDE_TRIGGERALGS_TRIGGERCANDIDATE_HPP_
 
 #include "triggeralgs/TriggerActivity.hpp"
-#include "triggeralgs/TriggerCandidateType.hpp"
 #include "triggeralgs/Types.hpp"
 
 #include <cstdint>
@@ -19,12 +18,26 @@
 namespace triggeralgs {
 struct TriggerCandidate
 {
+  enum class Type {
+    kUnknown = 0,
+    kTiming = 1,
+    kTPCLowE = 2,
+    kSupernova = 3,
+    kRandom = 4,
+  };
+
+  enum class Algorithm {
+    kUnknown = 0,
+    kSupernova = 1,
+    kHSIEventToTriggerCandidate = 2
+  };
+
   timestamp_t time_start = { 0 };
   timestamp_t time_end = { 0 };
   timestamp_t time_candidate = { 0 };
   std::vector<detid_t> detid; // NOLINT(build/unsigned)
-  TriggerCandidateType type = TriggerCandidateType::kUnknown;
-  candidate_alg_t algorithm = candidate_alg_t::kUnknown; // NOLINT(build/unsigned)
+  Type type = Type::kUnknown;
+  Algorithm algorithm = Algorithm::kUnknown; // NOLINT(build/unsigned)
   uint16_t version = { 0 };   // NOLINT(build/unsigned)
 
   std::vector<TriggerActivity> ta_list;

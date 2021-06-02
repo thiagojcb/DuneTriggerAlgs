@@ -16,14 +16,20 @@
 
 namespace triggeralgs {
 
-enum class TriggerActivityType {
-  kUnknown = 0,
-  kTPCTriggerActivity = 1,
-  kPDSTriggerActivity = 2,
-};
 
 struct TriggerActivity
 {
+  enum class Type {
+    kUnknown = 0,
+    kTPC = 1,
+    kPDS = 2,
+  };
+
+  enum class Algorithm {
+    kUnknown = 0,
+    kSupernova = 1
+  };
+
   timestamp_t time_start = { 0 };
   timestamp_t time_end = { 0 };
   timestamp_t time_peak = { 0 };
@@ -34,8 +40,8 @@ struct TriggerActivity
   uint64_t adc_integral = { 0 };  // NOLINT(build/unsigned)
   uint16_t adc_peak = { 0 };      // NOLINT(build/unsigned)
   detid_t detid = { 0 };         // NOLINT(build/unsigned)
-  TriggerActivityType type = TriggerActivityType::kUnknown;          // NOLINT(build/unsigned)
-  activity_alg_t algorithm = activity_alg_t::kUnknown;     // NOLINT(build/unsigned)
+  Type type = Type::kUnknown;          // NOLINT(build/unsigned)
+  Algorithm algorithm = Algorithm::kUnknown;     // NOLINT(build/unsigned)
   uint16_t version = { 0 };       // NOLINT(build/unsigned)
 
   std::vector<TriggerPrimitive> tp_list;

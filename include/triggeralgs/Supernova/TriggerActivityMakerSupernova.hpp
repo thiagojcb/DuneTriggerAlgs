@@ -25,10 +25,10 @@ class TriggerActivityMakerSupernova : public TriggerActivityMaker
 
     timestamp_t tend = input_tp.time_start + input_tp.time_over_threshold;
 
-    bool is_close_to_edge = (m_time_tolerance > abs(timestamp_diff_t(input_tp.time_start) - m_time_end)) ||
-      m_time_tolerance > abs(timestamp_diff_t(input_tp.time_start) - m_time_start) ||
-      m_time_tolerance > abs(timestamp_diff_t(tend) - m_time_end) ||
-      m_time_tolerance > abs(timestamp_diff_t(tend) - m_time_start);
+    bool is_close_to_edge = (m_time_tolerance > abs(timestamp_diff_t(input_tp.time_start) - timestamp_diff_t(m_time_end))) ||
+      m_time_tolerance > abs(timestamp_diff_t(input_tp.time_start) - timestamp_diff_t(m_time_start)) ||
+      m_time_tolerance > abs(timestamp_diff_t(tend) - timestamp_diff_t(m_time_end)) ||
+      m_time_tolerance > abs(timestamp_diff_t(tend) - timestamp_diff_t(m_time_start));
 
     bool is_in_between_edge = ((tend > m_time_start && tend < m_time_end) ||
                                (input_tp.time_start > m_time_start && input_tp.time_start < m_time_end));
@@ -77,8 +77,8 @@ private:
   uint64_t m_adc_integral = 0;  // NOLINT(build/unsigned)
   uint16_t m_adc_peak = 0;      // NOLINT(build/unsigned)
   detid_t m_detid = 0;         // NOLINT(build/unsigned)
-  TriggerActivityType m_type = TriggerActivityType::kTPCTriggerActivity;          // NOLINT(build/unsigned)
-  activity_alg_t m_algorithm = activity_alg_t::kSupernova;     // NOLINT(build/unsigned)
+  TriggerActivity::Type m_type = TriggerActivity::Type::kTPC;          // NOLINT(build/unsigned)
+  TriggerActivity::Algorithm m_algorithm = TriggerActivity::Algorithm::kSupernova;     // NOLINT(build/unsigned)
   uint16_t m_version = 0;       // NOLINT(build/unsigned)
 
   std::vector<TriggerPrimitive> m_tp_list;

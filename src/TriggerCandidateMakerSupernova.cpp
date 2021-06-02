@@ -39,8 +39,8 @@ TriggerCandidateMakerSupernova::operator()(const TriggerActivity& activity, std:
       activity.time_end,  // time_end, but that should probably be _at least_ this number
       time,
       detid_vector,                                // all the detector
-      TriggerCandidateType::kSupernova, // type ( flag that says what type of trigger might be (e.g. SN/Muon/Beam) )
-      candidate_alg_t::kSupernova, // algorithm ( flag that says which algorithm created the trigger (e.g. SN/HE/Solar) )
+      TriggerCandidate::Type::kSupernova, // type ( flag that says what type of trigger might be (e.g. SN/Muon/Beam) )
+      TriggerCandidate::Algorithm::kSupernova, // algorithm ( flag that says which algorithm created the trigger (e.g. SN/HE/Solar) )
       0,         // version of the above
       m_activity
     }; // TAs used to form this trigger candidate
