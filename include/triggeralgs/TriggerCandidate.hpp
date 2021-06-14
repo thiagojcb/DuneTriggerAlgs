@@ -32,13 +32,13 @@ struct TriggerCandidate
     kHSIEventToTriggerCandidate = 2
   };
 
-  timestamp_t time_start = { 0 };
-  timestamp_t time_end = { 0 };
-  timestamp_t time_candidate = { 0 };
+  timestamp_t time_start = INVALID_TIMESTAMP;
+  timestamp_t time_end = INVALID_TIMESTAMP;
+  timestamp_t time_candidate = INVALID_TIMESTAMP;
   std::vector<detid_t> detid; // NOLINT(build/unsigned)
   Type type = Type::kUnknown;
   Algorithm algorithm = Algorithm::kUnknown; // NOLINT(build/unsigned)
-  uint16_t version = { 0 };   // NOLINT(build/unsigned)
+  version_t version = INVALID_VERSION;   // NOLINT(build/unsigned)
 
   std::vector<TriggerActivity> ta_list;
 };

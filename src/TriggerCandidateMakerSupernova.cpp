@@ -28,8 +28,7 @@ TriggerCandidateMakerSupernova::operator()(const TriggerActivity& activity, std:
   if (m_activity.size() > m_threshold) {
     std::chrono::time_point<std::chrono::steady_clock> now;
 
-    // set all bits to one (probably this will mean down the line: "record every part of the detector")
-    detid_t detid = ~0x0; // NOLINT(build/unsigned)
+    detid_t detid = WHOLE_DETECTOR;
 
     std::vector<detid_t> detid_vector; // NOLINT(build/unsigned)
     detid_vector.push_back(detid);

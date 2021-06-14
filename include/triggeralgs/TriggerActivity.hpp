@@ -30,19 +30,19 @@ struct TriggerActivity
     kSupernova = 1
   };
 
-  timestamp_t time_start = { 0 };
-  timestamp_t time_end = { 0 };
-  timestamp_t time_peak = { 0 };
-  timestamp_t time_activity = { 0 };
-  channel_t channel_start = { 0 }; // NOLINT(build/unsigned)
-  channel_t channel_end = { 0 };   // NOLINT(build/unsigned)
-  channel_t channel_peak = { 0 };  // NOLINT(build/unsigned)
-  uint64_t adc_integral = { 0 };  // NOLINT(build/unsigned)
-  uint16_t adc_peak = { 0 };      // NOLINT(build/unsigned)
-  detid_t detid = { 0 };         // NOLINT(build/unsigned)
+  timestamp_t time_start = INVALID_TIMESTAMP;
+  timestamp_t time_end = INVALID_TIMESTAMP;
+  timestamp_t time_peak = INVALID_TIMESTAMP;
+  timestamp_t time_activity = INVALID_TIMESTAMP;
+  channel_t channel_start = INVALID_CHANNEL; // NOLINT(build/unsigned)
+  channel_t channel_end = INVALID_CHANNEL;   // NOLINT(build/unsigned)
+  channel_t channel_peak = INVALID_CHANNEL;  // NOLINT(build/unsigned)
+  uint64_t adc_integral =  0;  // NOLINT(build/unsigned)
+  uint16_t adc_peak = 0;      // NOLINT(build/unsigned)
+  detid_t detid = INVALID_DETID;         // NOLINT(build/unsigned)
   Type type = Type::kUnknown;          // NOLINT(build/unsigned)
   Algorithm algorithm = Algorithm::kUnknown;     // NOLINT(build/unsigned)
-  uint16_t version = { 0 };       // NOLINT(build/unsigned)
+  version_t version = INVALID_VERSION;       // NOLINT(build/unsigned)
 
   std::vector<TriggerPrimitive> tp_list;
 };
