@@ -14,6 +14,8 @@
 #include <cstddef>
 #include <cstdint>
 #include <bitset>
+#include <iostream>
+#include <type_traits>
 
 namespace triggeralgs {
 
@@ -30,7 +32,7 @@ struct TriggerPrimitive
     kTPC = 1,
     kPDS = 2,
   };
-
+  
   /**
    * @brief The algorithm used to form a TriggerPrimitive
    */
@@ -82,6 +84,20 @@ constexpr Flags kUnassigned13 = static_cast<Flags>(1) << 13;
 constexpr Flags kUnassigned14 = static_cast<Flags>(1) << 14;
 constexpr Flags kUnassigned15 = static_cast<Flags>(1) << 15;
 
+}
+
+inline std::istream& operator>>(std::istream& is, TriggerPrimitive::Type& t)
+{
+  std::underlying_type<TriggerPrimitive::Type>::type tmp;
+  is >> tmp;
+  t = static_cast<TriggerPrimitive::Type>(tmp);
+  return is;
+}
+
+inline std::ostream& operator<<(std::ostream& os, const TriggerPrimitive::Type& t)
+{
+  using underlying_t = std::underlying_type<TriggerPrimitive::Type>::type;
+  return os << static_cast<underlying_t>(t);
 }
 
 } // namespace triggeralgs
