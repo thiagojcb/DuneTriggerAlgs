@@ -5,6 +5,8 @@ include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
 set(CMAKE_INSTALL_CMAKEDIR   ${CMAKE_INSTALL_LIBDIR}/${PROJECT_NAME}/cmake )
 
+find_package(nlohmann_json REQUIRED)
+
 # We follow the daq-cmake convention of building one main library for
 # the package. In our case, we include all of the available trigger
 # implementations in the library (rather than, say, splitting them out
@@ -20,6 +22,8 @@ set(CMAKE_INSTALL_CMAKEDIR   ${CMAKE_INSTALL_LIBDIR}/${PROJECT_NAME}/cmake )
 # which uses triggeralgs (eg, for dunedaq plugins, the plugin will be
 # provided by the trigger package)
 add_library(triggeralgs SHARED
+  src/TriggerActivityMakerPrescale.cpp
+  src/TriggerCandidateMakerPrescale.cpp
   src/TriggerActivityMakerSupernova.cpp
   src/TriggerCandidateMakerSupernova.cpp
   src/TriggerDecisionMakerSupernova.cpp)
@@ -28,6 +32,7 @@ target_include_directories(triggeralgs PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   )
+target_link_libraries(triggeralgs PRIVATE nlohmann_json::nlohmann_json)
 install(TARGETS triggeralgs EXPORT triggeralgsTargets)
 
 CONFIGURE_PACKAGE_CONFIG_FILE(cmake/triggeralgsConfig.cmake.in
