@@ -17,6 +17,7 @@ enum class TriggerCandidateType
   kTPCLowE = 2,
   kSupernova = 3,
   kRandom = 4,
+  kPrescale = 5
 };
 } // namespace triggeralgs
 
