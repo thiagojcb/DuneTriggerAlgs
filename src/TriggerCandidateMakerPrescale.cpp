@@ -8,8 +8,10 @@
 
 #include "triggeralgs/Prescale/TriggerCandidateMakerPrescale.hpp"
 
+#include "TRACE/trace.h"
+#define TRACE_NAME "TriggerCandidateMakerPrescale"
+
 #include <vector>
-#include <iostream>
 
 using namespace triggeralgs;
 
@@ -18,7 +20,7 @@ TriggerCandidateMakerPrescale::operator()(const TriggerActivity& activity, std::
 { 
   if ((m_activity_count++) % m_prescale == 0)
   {
-    //std::cout << "Emitting prescaled TriggerCandidate " << m_activity_count << std::endl;
+    TLOG_DEBUG(TRACE_NAME) << "Emitting prescaled TriggerCandidate " << (m_activity_count-1);
     std::vector<uint16_t> detid_vector;
     detid_vector.push_back(activity.detid);
     std::vector<TriggerActivity> ta_list;
@@ -46,5 +48,5 @@ TriggerCandidateMakerPrescale::configure(const nlohmann::json &config)
   {
     m_prescale = config["prescale"]; 
   }
-  std::cout << "Using candidate prescale " << m_prescale << std::endl;
+  TLOG_DEBUG(TRACE_NAME) << "Using candidate prescale " << m_prescale;
 }

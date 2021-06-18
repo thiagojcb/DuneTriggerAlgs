@@ -6,6 +6,7 @@ include(GNUInstallDirs)
 set(CMAKE_INSTALL_CMAKEDIR   ${CMAKE_INSTALL_LIBDIR}/${PROJECT_NAME}/cmake )
 
 find_package(nlohmann_json REQUIRED)
+find_package(TRACE REQUIRED)
 
 # We follow the daq-cmake convention of building one main library for
 # the package. In our case, we include all of the available trigger

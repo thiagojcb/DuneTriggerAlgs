@@ -8,8 +8,10 @@
 
 #include "triggeralgs/Prescale/TriggerActivityMakerPrescale.hpp"
 
+#include "TRACE/trace.h"
+#define TRACE_NAME "TriggerActivityMakerPrescale"
+
 #include <vector>
-#include <iostream>
 
 using namespace triggeralgs;
 
@@ -18,7 +20,7 @@ TriggerActivityMakerPrescale::operator()(const TriggerPrimitive& input_tp, std::
 {
   if ((m_primitive_count++) % m_prescale == 0) 
   {
-    //std::cout << "Emitting prescaled TriggerActivity " << m_primitive_count << std::endl;
+    TLOG_DEBUG(TRACE_NAME) << "Emitting prescaled TriggerActivity " << (m_primitive_count-1);
     std::vector<TriggerPrimitive> tp_list;
     tp_list.push_back(input_tp);
     TriggerActivity ta { 
@@ -49,5 +51,5 @@ TriggerActivityMakerPrescale::configure(const nlohmann::json &config)
   {
     m_prescale = config["prescale"]; 
   }
-  std::cout << "Using activity prescale " << m_prescale << std::endl;
+  TLOG_DEBUG(TRACE_NAME) << "Using activity prescale " << m_prescale;
 }
