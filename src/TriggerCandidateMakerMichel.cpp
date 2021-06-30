@@ -41,7 +41,7 @@ TriggerCandidateMakerMichel::operator()(const TriggerActivity& activity, std::ve
       int64_t(
         pd_clock(now.time_since_epoch()).count()), // this is now in dune time, with a cast to avoid narrowing warning
       detid_vector,                                // all the detector
-      TriggerCandidateType::kMichel, // type ( flag that says what type of trigger might be (e.g. SN/Muon/Beam) )
+      TriggerCandidateType::kSupernova, // type ( flag that says what type of trigger might be (e.g. SN/Muon/Beam) )
       algorithm, // algorithm ( flag that says which algorithm created the trigger (e.g. SN/HE/Solar) )
       0,         // version of the above
       m_activity
