@@ -27,7 +27,10 @@ add_library(triggeralgs SHARED
   src/TriggerCandidateMakerPrescale.cpp
   src/TriggerActivityMakerSupernova.cpp
   src/TriggerCandidateMakerSupernova.cpp
-  src/TriggerDecisionMakerSupernova.cpp)
+  src/TriggerDecisionMakerSupernova.cpp
+  src/TriggerActivityMakerMichel.cpp
+  src/TriggerCandidateMakerMichel.cpp
+  src/TriggerDecisionMakerMichel.cpp)
 target_include_directories(triggeralgs PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
