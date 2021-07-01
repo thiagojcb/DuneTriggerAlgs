@@ -36,11 +36,11 @@ protected:
   std::atomic<uint16_t> m_hit_threshold = { 2 }; // NOLINT(build/unsigned)
 
   /// this function gets rid of the old activities
-  void FlushOldActivity(int64_t time_now)
+  void FlushOldActivity(timestamp_t time_now)
   {
-    int64_t how_far = time_now - m_time_window;
+    timestamp_diff_t how_far = time_now - m_time_window;
     auto end = std::remove_if(
-      m_activity.begin(), m_activity.end(), [how_far, this](auto& c) -> bool { return (c.time_start < how_far); });
+                              m_activity.begin(), m_activity.end(), [how_far, this](auto& c) -> bool { return (static_cast<timestamp_diff_t>(c.time_start) < how_far); });
     m_activity.erase(end, m_activity.end());
   }
 };

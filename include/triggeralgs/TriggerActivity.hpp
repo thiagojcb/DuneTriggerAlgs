@@ -9,26 +9,41 @@
 #ifndef TRIGGERALGS_INCLUDE_TRIGGERALGS_TRIGGERACTIVITY_HPP_
 #define TRIGGERALGS_INCLUDE_TRIGGERALGS_TRIGGERACTIVITY_HPP_
 
+#include "triggeralgs/Types.hpp"
 #include "triggeralgs/TriggerPrimitive.hpp"
 #include <cstdint>
 #include <vector>
 
 namespace triggeralgs {
+
+
 struct TriggerActivity
 {
-  int64_t time_start = { 0 };
-  int64_t time_end = { 0 };
-  int64_t time_peak = { 0 };
-  int64_t time_activity = { 0 };
-  uint16_t channel_start = { 0 }; // NOLINT(build/unsigned)
-  uint16_t channel_end = { 0 };   // NOLINT(build/unsigned)
-  uint16_t channel_peak = { 0 };  // NOLINT(build/unsigned)
-  uint64_t adc_integral = { 0 };  // NOLINT(build/unsigned)
-  uint16_t adc_peak = { 0 };      // NOLINT(build/unsigned)
-  uint16_t detid = { 0 };         // NOLINT(build/unsigned)
-  uint32_t type = { 0 };          // NOLINT(build/unsigned)
-  uint32_t algorithm = { 0 };     // NOLINT(build/unsigned)
-  uint16_t version = { 0 };       // NOLINT(build/unsigned)
+  enum class Type {
+    kUnknown = 0,
+    kTPC = 1,
+    kPDS = 2,
+  };
+
+  enum class Algorithm {
+    kUnknown = 0,
+    kSupernova = 1,
+    kPrescale = 2
+  };
+
+  timestamp_t time_start = INVALID_TIMESTAMP;
+  timestamp_t time_end = INVALID_TIMESTAMP;
+  timestamp_t time_peak = INVALID_TIMESTAMP;
+  timestamp_t time_activity = INVALID_TIMESTAMP;
+  channel_t channel_start = INVALID_CHANNEL; // NOLINT(build/unsigned)
+  channel_t channel_end = INVALID_CHANNEL;   // NOLINT(build/unsigned)
+  channel_t channel_peak = INVALID_CHANNEL;  // NOLINT(build/unsigned)
+  uint64_t adc_integral =  0;  // NOLINT(build/unsigned)
+  uint16_t adc_peak = 0;      // NOLINT(build/unsigned)
+  detid_t detid = INVALID_DETID;         // NOLINT(build/unsigned)
+  Type type = Type::kUnknown;          // NOLINT(build/unsigned)
+  Algorithm algorithm = Algorithm::kUnknown;     // NOLINT(build/unsigned)
+  version_t version = INVALID_VERSION;       // NOLINT(build/unsigned)
 
   std::vector<TriggerPrimitive> tp_list;
 };

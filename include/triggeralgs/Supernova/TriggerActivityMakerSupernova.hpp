@@ -23,11 +23,12 @@ class TriggerActivityMakerSupernova : public TriggerActivityMaker
   inline bool is_time_consistent(const TriggerPrimitive& input_tp) const
   {
 
-    int64_t tend = input_tp.time_start + input_tp.time_over_threshold;
+    timestamp_t tend = input_tp.time_start + input_tp.time_over_threshold;
 
-    bool is_close_to_edge = (m_time_tolerance > abs(input_tp.time_start - m_time_end) ||
-                             m_time_tolerance > abs(input_tp.time_start - m_time_start) ||
-                             m_time_tolerance > abs(tend - m_time_end) || m_time_tolerance > abs(tend - m_time_start));
+    bool is_close_to_edge = (m_time_tolerance > abs(timestamp_diff_t(input_tp.time_start) - timestamp_diff_t(m_time_end))) ||
+      m_time_tolerance > abs(timestamp_diff_t(input_tp.time_start) - timestamp_diff_t(m_time_start)) ||
+      m_time_tolerance > abs(timestamp_diff_t(tend) - timestamp_diff_t(m_time_end)) ||
+      m_time_tolerance > abs(timestamp_diff_t(tend) - timestamp_diff_t(m_time_start));
 
     bool is_in_between_edge = ((tend > m_time_start && tend < m_time_end) ||
                                (input_tp.time_start > m_time_start && input_tp.time_start < m_time_end));
@@ -38,8 +39,8 @@ class TriggerActivityMakerSupernova : public TriggerActivityMaker
   inline bool is_channel_consistent(const TriggerPrimitive& input_tp) const
   {
 
-    bool is_close_to_edge = (m_channel_tolerance > abs((int16_t)input_tp.channel - (int16_t)m_channel_end) ||
-                             m_channel_tolerance > abs((int16_t)input_tp.channel - (int16_t)m_channel_start));
+    bool is_close_to_edge = (m_channel_tolerance > abs(input_tp.channel - m_channel_end) ||
+                             m_channel_tolerance > abs(input_tp.channel - m_channel_start));
 
     bool is_in_between_edge = (input_tp.channel > m_channel_start && input_tp.channel < m_channel_end);
 
@@ -52,9 +53,9 @@ public:
   void flush(timestamp_t, std::vector<TriggerActivity>& tas) override { tas.push_back(MakeTriggerActivity()); }
 
 protected:
-  int64_t m_time_tolerance =
+  timestamp_diff_t m_time_tolerance =
     250; /// Maximum tolerated time difference between two primitives to form an activity (in 50 MHz clock ticks)
-  int16_t m_channel_tolerance =
+  channel_t m_channel_tolerance =
     2; /// Maximum tolerated channel number difference between two primitives to form an activity
 
 private:
@@ -66,19 +67,19 @@ private:
     return ta;
   }
 
-  int64_t m_time_start = 0;
-  int64_t m_time_end = 0;
-  int64_t m_time_peak = 0;
-  int64_t m_time_activity = 0;
-  uint16_t m_channel_start = 0; // NOLINT(build/unsigned)
-  uint16_t m_channel_end = 0;   // NOLINT(build/unsigned)
-  uint16_t m_channel_peak = 0;  // NOLINT(build/unsigned)
+  timestamp_t m_time_start = 0;
+  timestamp_t m_time_end = 0;
+  timestamp_t m_time_peak = 0;
+  timestamp_t m_time_activity = 0;
+  channel_t m_channel_start = 0; // NOLINT(build/unsigned)
+  channel_t m_channel_end = 0;   // NOLINT(build/unsigned)
+  channel_t m_channel_peak = 0;  // NOLINT(build/unsigned)
   uint64_t m_adc_integral = 0;  // NOLINT(build/unsigned)
   uint16_t m_adc_peak = 0;      // NOLINT(build/unsigned)
-  uint16_t m_detid = 0;         // NOLINT(build/unsigned)
-  uint16_t m_type = 0;          // NOLINT(build/unsigned)
-  uint16_t m_algorithm = 0;     // NOLINT(build/unsigned)
-  uint16_t m_version = 0;       // NOLINT(build/unsigned)
+  detid_t m_detid = 0;         // NOLINT(build/unsigned)
+  TriggerActivity::Type m_type = TriggerActivity::Type::kTPC;
+  TriggerActivity::Algorithm m_algorithm = TriggerActivity::Algorithm::kSupernova;
+  version_t m_version = 0;
 
   std::vector<TriggerPrimitive> m_tp_list;
 };
