@@ -27,7 +27,8 @@ struct TriggerActivity
 
   enum class Algorithm {
     kUnknown = 0,
-    kSupernova = 1
+    kSupernova = 1,
+    kPrescale = 2
   };
 
   timestamp_t time_start = INVALID_TIMESTAMP;

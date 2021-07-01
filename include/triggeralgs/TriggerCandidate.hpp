@@ -24,12 +24,14 @@ struct TriggerCandidate
     kTPCLowE = 2,
     kSupernova = 3,
     kRandom = 4,
+    kPrescale = 5,
   };
 
   enum class Algorithm {
     kUnknown = 0,
     kSupernova = 1,
-    kHSIEventToTriggerCandidate = 2
+    kHSIEventToTriggerCandidate = 2,
+    kPrescale = 3,
   };
 
   timestamp_t time_start = INVALID_TIMESTAMP;

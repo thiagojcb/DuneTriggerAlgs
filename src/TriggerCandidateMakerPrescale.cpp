@@ -31,8 +31,8 @@ TriggerCandidateMakerPrescale::operator()(const TriggerActivity& activity, std::
       activity.time_end,  
       activity.time_start,
       detid_vector,
-      TriggerCandidateType::kPrescale,
-      0,
+      TriggerCandidate::Type::kPrescale,
+      TriggerCandidate::Algorithm::kPrescale,
       0,
       ta_list
     };
