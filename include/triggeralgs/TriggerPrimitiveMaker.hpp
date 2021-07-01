@@ -11,7 +11,7 @@
 
 #include "triggeralgs/TriggerPrimitive.hpp"
 
-#include <string>
+#include <nlohmann/json.hpp>
 #include <vector>
 
 namespace triggeralgs {
@@ -21,6 +21,7 @@ class TriggerPrimitiveMaker
 public:
   virtual void operator()(const void* input_rawdata, std::vector<TriggerPrimitive>& output_tp) = 0;
   virtual void flush(std::vector<TriggerPrimitive>&) {}
+  virtual void configure(const nlohmann::json&) {}
 };
 
 } // namespace triggeralgs
