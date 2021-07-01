@@ -39,8 +39,8 @@ class TriggerActivityMakerSupernova : public TriggerActivityMaker
   inline bool is_channel_consistent(const TriggerPrimitive& input_tp) const
   {
 
-    bool is_close_to_edge = (m_channel_tolerance > abs((int16_t)input_tp.channel - (int16_t)m_channel_end) ||
-                             m_channel_tolerance > abs((int16_t)input_tp.channel - (int16_t)m_channel_start));
+    bool is_close_to_edge = (m_channel_tolerance > abs(input_tp.channel - m_channel_end) ||
+                             m_channel_tolerance > abs(input_tp.channel - m_channel_start));
 
     bool is_in_between_edge = (input_tp.channel > m_channel_start && input_tp.channel < m_channel_end);
 
@@ -77,9 +77,9 @@ private:
   uint64_t m_adc_integral = 0;  // NOLINT(build/unsigned)
   uint16_t m_adc_peak = 0;      // NOLINT(build/unsigned)
   detid_t m_detid = 0;         // NOLINT(build/unsigned)
-  TriggerActivity::Type m_type = TriggerActivity::Type::kTPC;          // NOLINT(build/unsigned)
-  TriggerActivity::Algorithm m_algorithm = TriggerActivity::Algorithm::kSupernova;     // NOLINT(build/unsigned)
-  uint16_t m_version = 0;       // NOLINT(build/unsigned)
+  TriggerActivity::Type m_type = TriggerActivity::Type::kTPC;
+  TriggerActivity::Algorithm m_algorithm = TriggerActivity::Algorithm::kSupernova;
+  version_t m_version = 0;
 
   std::vector<TriggerPrimitive> m_tp_list;
 };

@@ -21,7 +21,7 @@ TriggerActivityMakerSupernova::operator()(const TriggerPrimitive& input_tp, std:
   // auto now = std::chrono::steady_clock::now();
   // m_algorithm = (uint32_t)pd_clock(now.time_since_epoch()).count();
 
-  int64_t tend = input_tp.time_start + input_tp.time_over_threshold;
+  timestamp_t tend = input_tp.time_start + input_tp.time_over_threshold;
 
   if (m_time_start == 0) {
     m_tp_list.erase(m_tp_list.begin(), m_tp_list.end());
